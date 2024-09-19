@@ -32,7 +32,7 @@ public class Redis
                     return ConnectionMultiplexer.Connect(new ConfigurationOptions
                     {
                         AbortOnConnectFail = false,
-                        EndPoints = { this.ConnectionString }
+                        EndPoints = { ConnectionString }
                     });
                 }
                 catch (Exception ex)
@@ -57,7 +57,7 @@ public class Redis
             {
                 if (redis == null)
                 {
-                    return default(T);
+                    return default;
                 }
 
                 RedisValue redisValue = redis.Value.GetDatabase().StringGet(key);
@@ -66,7 +66,7 @@ public class Redis
                     return new Converter().Deserialize<T>(redisValue);
                 }
 
-                return default(T);
+                return default;
             }
             catch (Exception)
             {
