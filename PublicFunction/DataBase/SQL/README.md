@@ -19,7 +19,8 @@ In this **class**, we have infrastructures that can **centrally control** the co
             "DataBase": {
               "SQL": {
                 "SQLService": {
-                  "ConnectionString": "sql Connection String"
+                  "ConnectionString": "sql Connection String",
+                  "ConnectionStringMirror":"for All Select Class Use this Connection String"
                 }
               }
             }
