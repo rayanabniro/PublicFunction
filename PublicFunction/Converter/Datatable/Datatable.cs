@@ -15,7 +15,7 @@ namespace PublicFunction.Converter
         public List<Dictionary<string, object>> DataTableToDictionary(DataTable _DataTable);
         public List<Dictionary<string, object>> DataTableToDictionary(ref DataTable _DataTable);
     }
-    public class DatatableConvertor: IDatatableConvertor
+    public class DatatableConvertor : IDatatableConvertor
     {
         public string DataTableToJson(DataTable _DataTable)
         {
@@ -52,7 +52,7 @@ namespace PublicFunction.Converter
                                      select new DataColumn(r.Key, r.Value.GetType())).ToArray());
             list.ForEach(delegate (Dictionary<string, object> r)
             {
-                result.Rows.Add(r.Select<KeyValuePair<string, object>, object>((KeyValuePair<string, object> c) => c.Value).Cast<object>().ToArray());
+                result.Rows.Add(r.Select((c) => c.Value).Cast<object>().ToArray());
             });
             return result;
         }
