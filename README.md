@@ -1,3 +1,27 @@
+# Why should you use the [PublicFunction][1] package?
+
+https://www.nuget.org/packages/PublicFunction
+
+Are you looking for a simple and efficient solution to manage public functions in your projects? The [PublicFunction][1] package is exactly what you need! This package takes your development experience to a new level with its unique features.
+## Highlights of [PublicFunction][1]:
+
+ - Ease of use: Getting started with [PublicFunction][1]is easy, with thorough documentation and practical examples.
+ - High Performance: Optimized functions for better and faster performance.
+ - Active community: With a dynamic and active community, you can always benefit from the help and advice of others.
+
+## Why [PublicFunction][1]?
+
+ - Save time: significantly reduce your development time by using ready-made functions.
+ - Cleaner code: Organize your code and make it more readable by using public functions.
+ - Strong support: With comprehensive documentation and active support, you'll never be alone on the development journey.
+
+Install the [PublicFunction][1] package today and feel the difference! To get started.
+
+
+  [1]: https://www.nuget.org/packages/PublicFunction
+
+
+
 Join Our Team and Be Part of an Innovative Open-Source Project!
 
 Have you ever wanted to contribute to a meaningful, real-world project with a global impact? We are seeking passionate and creative developers to join us in building a powerful C# class library aimed at improving and accelerating the development process for programmers worldwide.
