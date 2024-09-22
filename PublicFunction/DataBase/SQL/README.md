@@ -12,30 +12,30 @@
 In this **class**, we have infrastructures that can **centrally control** the connection to the **sql database**
 
 ## Use in .netCore
--in **appsettings.json** define Connection string like this
-```
-    {
-      "PublicFunction": {
-        "DataBase": {
-          "SQL": {
-            "SQLService": {
-              "ConnectionString": "sql Connection String"
+- in **appsettings.json** define Connection string like this
+    ```json
+        {
+          "PublicFunction": {
+            "DataBase": {
+              "SQL": {
+                "SQLService": {
+                  "ConnectionString": "sql Connection String"
+                }
+              }
             }
           }
         }
-      }
-    }
-```
+    ```
 - in **Program.cs**  Add This dependence
-  ```
+  ```C#
     builder.Services.AddSingleton<IConfiguration>(_ => configuration);
   ```
 - in **Program.cs**  Add This dependence
-  ```
+  ```C#
     builder.Services.AddScoped<PublicFunction.Framework.DataBase.SQL.ISQLService, PublicFunction.Framework.DataBase.SQL.SQLService>();
   ```
 - Suppose you want to use functions in a class, just write the following code in its constructor function
-  ```
+  ```C#
     public class Test
     	{
     		private readonly PublicFunction.Framework.DataBase.SQL.ISQLService SQLService;
