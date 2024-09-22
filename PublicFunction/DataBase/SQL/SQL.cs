@@ -127,7 +127,7 @@ public class SQL
             try
             {
                 DataTable dt = Select();
-                return new Json.ConvertorDatatable().DataTableToDictionary(dt);
+                return new Converter.DatatableConvertor().DataTableToDictionary(dt);
             }
             catch (Exception EX)
             {
@@ -140,8 +140,8 @@ public class SQL
             try
             {
                 DataTable Data = Select();
-                string Json = new Json.ConvertorDatatable().DataTableToJson(Data);
-                return new Json.Converter().Deserialize<T>(Json);
+                string Json = new Converter.DatatableConvertor().DataTableToJson(Data);
+                return new Converter.Json().Deserialize<T>(Json);
             }
             catch (Exception EX)
             {
@@ -173,7 +173,7 @@ public class SQL
             try
             {
                 DataSet DS = MultiSelect();
-                return new Json.ConvertorDataSet().DataSetToList(DS);
+                return new Converter.DataSetConverter().DataSetToList(DS);
 
             }
             catch (Exception EX)
@@ -187,13 +187,13 @@ public class SQL
             try
             {
                 DataSet Data = MultiSelect();
-                string Json = new Json.ConvertorDataSet().DataSetToJson(Data);
+                string Json = new Converter.DataSetConverter().DataSetToJson(Data);
                 for (int i = tableName.Length - 1; 0 <= i; i--)
                 {
                     string TableName = i == 0 ? @"""Table""" : @"""Table" + i + @"""";
                     Json = Json.Replace(TableName, @"""" + tableName[i] + @"""");
                 }
-                return new Json.Converter().Deserialize<T>(Json);
+                return new Converter.Json().Deserialize<T>(Json);
             }
             catch (Exception EX)
             {
