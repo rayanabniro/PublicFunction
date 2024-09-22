@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using StackExchange.Redis;
-using PublicFunction.Json;
+
 
 namespace PublicFunction.DataBase;
 public class Redis
@@ -63,7 +63,7 @@ public class Redis
                 RedisValue redisValue = redis.Value.GetDatabase().StringGet(key);
                 if (!redisValue.IsNull)
                 {
-                    return new Converter().Deserialize<T>(redisValue);
+                    return new Converter.Json().Deserialize<T>(redisValue);
                 }
 
                 return default;
@@ -78,7 +78,7 @@ public class Redis
         {
             if (redis != null)
             {
-                redis.Value.GetDatabase().StringSet(key, new Converter().Serialize(value), experation);
+                redis.Value.GetDatabase().StringSet(key, new Converter.Json().Serialize(value), experation);
             }
         }
         public bool EXISTS(string key)
