@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 
 
-namespace PublicFunction.DataBase
+namespace PublicFunction.DataBase.Mongo
 {
     public class TBaseDocumentModel
     {
