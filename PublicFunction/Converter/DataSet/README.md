@@ -1,6 +1,3 @@
-
-# Microsoft SQL Server
-
 # PublicFunction.Converter
 
 In this **class**, we have infrastructures that can **centrally control** For Converter **dataSet**
