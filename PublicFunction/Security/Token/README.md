@@ -100,13 +100,14 @@ Implements the `IJWTAlgorithm` interface using the RSA SHA-512 algorithm.
 var hs256 = new JWTToken.HS256("your-secret-key");
 var token = hs256.Create("issuer", "audience", DateTime.UtcNow, DateTime.UtcNow.AddHours(1))
                  .Encode();
-
+```
 
 # Decrypting a JWT Token with HS256
 
 ```csharp
 var hs256 = new JWTToken.HS256("your-secret-key");
 var tokenData = hs256.Decrypt<JWTToken.TokenBaseStructure>("your-jwt-token", "issuer", "audience", true, true);
+```
 
 # Creating a JWT Token with RS256
 
@@ -116,6 +117,7 @@ rs256.PrivateKey_XML = "your-private-key-xml";
 rs256.PublicKey_XML = "your-public-key-xml";
 var token = rs256.Create("issuer", "audience", DateTime.UtcNow, DateTime.UtcNow.AddHours(1))
                  .Encode();
+```
 
 # Decrypting a JWT Token with RS256
 
@@ -124,5 +126,5 @@ var rs256 = new JWTToken.RS256();
 rs256.PrivateKey_XML = "your-private-key-xml";
 rs256.PublicKey_XML = "your-public-key-xml";
 var tokenData = rs256.Decrypt<JWTToken.TokenBaseStructure>("your-jwt-token", "issuer", "audience", true, true);
-
+```
 
