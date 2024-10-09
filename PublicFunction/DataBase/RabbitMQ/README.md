@@ -122,12 +122,16 @@ This class and interface provide a robust way to interact with RabbitMQ within y
 ## appsettings.json
 ```json
 {
-  "RabbitMQ": {
-    "HostName": "localhost",
-    "VirtualHost": "/",
-    "UserName": "guest",
-    "Password": "guest",
-    "Port": "5672"
-  }
+    "PublicFunction": {
+        "DataBase": {
+          "RabbitMQ": {
+            "HostName": "localhost",
+            "VirtualHost": "/",
+            "UserName": "guest",
+            "Password": "guest",
+            "Port": "5672"
+          }
+        }
+    }
 }
 ```
