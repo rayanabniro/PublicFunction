@@ -33,11 +33,11 @@ namespace PublicFunction.DataBase.RabbitMQ
                 // تنظیم RabbitMQ ConnectionFactory با خواندن مقادیر از IConfiguration
                 var factory = new ConnectionFactory()
                 {
-                    HostName = Configuration["RabbitMQ:HostName"],
-                    VirtualHost = Configuration["RabbitMQ:VirtualHost"],
-                    UserName = Configuration["RabbitMQ:UserName"],
-                    Password = Configuration["RabbitMQ:Password"],
-                    Port = int.Parse(Configuration["RabbitMQ:Port"])
+                    HostName = Configuration["PublicFunction:DataBase:RabbitMQ:HostName"],
+                    VirtualHost = Configuration["PublicFunction:DataBase:RabbitMQ:VirtualHost"],
+                    UserName = Configuration["PublicFunction:DataBase:RabbitMQ:UserName"],
+                    Password = Configuration["PublicFunction:DataBase:RabbitMQ:Password"],
+                    Port = int.Parse(Configuration["PublicFunction:DataBase:RabbitMQ:Port"])
                 };
 
                 _connection = factory.CreateConnection();
