@@ -118,3 +118,16 @@ public class Startup
 ```
 
 This class and interface provide a robust way to interact with RabbitMQ within your .NET Core applications.
+
+## appsettings.json
+```json
+{
+  "RabbitMQ": {
+    "HostName": "localhost",
+    "VirtualHost": "/",
+    "UserName": "guest",
+    "Password": "guest",
+    "Port": "5672"
+  }
+}
+```
