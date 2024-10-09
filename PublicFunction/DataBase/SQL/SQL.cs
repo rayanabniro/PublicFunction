@@ -37,7 +37,6 @@ public class SQL
             Configuration = configuration;
             _SqlConnectionMirror = new SqlConnection(ConnectionStringMirror);
             _SqlConnection = new SqlConnection(ConnectionString);
-
         }
         private string ConnectionString
         {
@@ -55,8 +54,8 @@ public class SQL
         }
         public string StoredProcedureName
         {
-            get { return _SqlCommand.CommandText; }   // get method
-            set { _SqlCommand = new(value, _SqlConnectionMirror) { CommandType = CommandType.StoredProcedure }; }  // set method
+            get { return _SqlCommand.CommandText; }
+            set { _SqlCommand = new(value, _SqlConnectionMirror) { CommandType = CommandType.StoredProcedure }; }
         }
         public void AddParameter(string Name, SqlDbType DbType, object Data)
         {
@@ -82,44 +81,44 @@ public class SQL
         }
         public void AddParameterS<T>(T TModel) where T : SQLStoredProcedureModel
         {
+            foreach (var prop in typeof(T).GetProperties())
+            {
+                var value = prop.GetValue(TModel);
+                _SqlCommand.Parameters.Add(new SqlParameter("@" + prop.Name, value ?? DBNull.Value));
+            }
         }
         public bool Add()
         {
             try
             {
-
                 _SqlCommand.Connection = _SqlConnection;
                 _SqlConnection.Open();
                 _SqlCommand.ExecuteNonQuery();
                 return true;
             }
-            catch (Exception EX)
+            catch (Exception ex)
             {
-
-                throw EX;
+                throw ex;
             }
             finally
             {
                 _SqlConnection.Close();
             }
-
         }
         public DataTable Select()
         {
             try
             {
-                DataTable DT = new DataTable();
+                DataTable dt = new DataTable();
                 _SqlConnectionMirror.Open();
                 SqlDataAdapter da = new SqlDataAdapter(_SqlCommand);
-                da.Fill(DT);
+                da.Fill(dt);
                 _SqlConnectionMirror.Close();
-                return DT;
-
+                return dt;
             }
-            catch (Exception EX)
+            catch (Exception ex)
             {
-
-                throw EX;
+                throw ex;
             }
         }
         public List<Dictionary<string, object>> SelectList()
@@ -127,201 +126,153 @@ public class SQL
             try
             {
                 DataTable dt = Select();
-                return new Converter.DatatableConvertor().DataTableToDictionary(dt);
+                return dt.AsEnumerable().Select(row => dt.Columns.Cast<DataColumn>().ToDictionary(col => col.ColumnName, col => row[col])).ToList();
             }
-            catch (Exception EX)
+            catch (Exception ex)
             {
-
-                throw EX;
+                throw ex;
             }
         }
         public T SelectModel<T>() where T : SQLDataModel
         {
             try
             {
-                DataTable Data = Select();
-                string Json = new Converter.DatatableConvertor().DataTableToJson(Data);
-                return new Converter.Json().Deserialize<T>(Json);
+                DataTable dt = Select();
+                if (dt.Rows.Count == 0) return default;
+                T model = Activator.CreateInstance<T>();
+                foreach (var prop in typeof(T).GetProperties())
+                {
+                    if (dt.Columns.Contains(prop.Name))
+                    {
+                        prop.SetValue(model, dt.Rows[0][prop.Name] == DBNull.Value ? null : dt.Rows[0][prop.Name]);
+                    }
+                }
+                return model;
             }
-            catch (Exception EX)
+            catch (Exception ex)
             {
-
-                throw EX;
+                throw ex;
             }
         }
         public DataSet MultiSelect()
         {
             try
             {
-                DataSet DS = new DataSet();
+                DataSet ds = new DataSet();
                 _SqlConnectionMirror.Open();
                 SqlDataAdapter da = new SqlDataAdapter(_SqlCommand);
-                da.Fill(DS);
+                da.Fill(ds);
                 _SqlConnectionMirror.Close();
-                return DS;
-
+                return ds;
             }
-            catch (Exception EX)
+            catch (Exception ex)
             {
-
-                throw EX;
+                throw ex;
             }
         }
-
         public List<List<Dictionary<string, object>>> MultiSelectList()
         {
             try
             {
-                DataSet DS = MultiSelect();
-                return new Converter.DataSetConverter().DataSetToList(DS);
-
+                DataSet ds = MultiSelect();
+                return ds.Tables.Cast<DataTable>().Select(table => table.AsEnumerable().Select(row => table.Columns.Cast<DataColumn>().ToDictionary(col => col.ColumnName, col => row[col])).ToList()).ToList();
             }
-            catch (Exception EX)
+            catch (Exception ex)
             {
-
-                throw EX;
+                throw ex;
             }
         }
-        public T MultiSelectModel<T>(string[] tableName) where T : SQLDataModel
+        public T MultiSelectModel<T>(string[] tableNames) where T : SQLDataModel
         {
             try
             {
-                DataSet Data = MultiSelect();
-                string Json = new Converter.DataSetConverter().DataSetToJson(Data);
-                for (int i = tableName.Length - 1; 0 <= i; i--)
+                DataSet ds = MultiSelect();
+                var model = Activator.CreateInstance<T>();
+                foreach (var tableName in tableNames)
                 {
-                    string TableName = i == 0 ? @"""Table""" : @"""Table" + i + @"""";
-                    Json = Json.Replace(TableName, @"""" + tableName[i] + @"""");
+                    if (ds.Tables.Contains(tableName))
+                    {
+                        var table = ds.Tables[tableName];
+                        foreach (var prop in typeof(T).GetProperties())
+                        {
+                            if (table.Columns.Contains(prop.Name))
+                            {
+                                prop.SetValue(model, table.Rows[0][prop.Name] == DBNull.Value ? null : table.Rows[0][prop.Name]);
+                            }
+                        }
+                    }
                 }
-                return new Converter.Json().Deserialize<T>(Json);
+                return model;
             }
-            catch (Exception EX)
+            catch (Exception ex)
             {
-
-                throw EX;
+                throw ex;
             }
         }
-        public bool Insert<T>(string tableName, T Model) where T : SQLDataModel
+        public bool Insert<T>(string tableName, T model) where T : SQLDataModel
         {
             try
             {
-                List<string> Columns = new List<string>();
-                List<string> Value = new List<string>();
-                Type _Type = Model.GetType();
-                foreach (PropertyInfo pi in _Type.GetProperties())
+                var columns = string.Join(", ", typeof(T).GetProperties().Select(p => p.Name));
+                var values = string.Join(", ", typeof(T).GetProperties().Select(p => "@" + p.Name));
+                var query = $"INSERT INTO {tableName} ({columns}) VALUES ({values})";
+                _SqlCommand = new SqlCommand(query, _SqlConnection);
+                foreach (var prop in typeof(T).GetProperties())
                 {
-                    string Data = pi.GetValue(Model, null)?.ToString();
-                    if (pi.PropertyType == typeof(bool))
-                    {
-                        if (Data.ToLower() == "true")
-                        {
-                            Data = "''1''";
-                        }
-                        else
-                        {
-                            Data = "''0''";
-                        }
-                    }
-                    else if (pi.PropertyType == typeof(string))
-                    {
-                        Data = "N''" + Data + "''";
-                    }
-                    else
-                    {
-                        Data = "''" + Data + "''";
-                    }
-
-                    var DisplayName = pi.GetCustomAttributes(typeof(DisplayAttribute), false).Cast<DisplayAttribute>().Single().Name;
-                    Columns.Add(pi.Name);
-                    Value.Add(Data);
+                    _SqlCommand.Parameters.AddWithValue("@" + prop.Name, prop.GetValue(model) ?? DBNull.Value);
                 }
-                string ColumnsString = string.Join(",", Columns.Select(x => "[" + x + "]").ToArray());
-                string ValueString = string.Join(",", Value.Select(x => x).ToArray());
-                _SqlCommand = new SqlCommand()
-                {
-                    Connection = _SqlConnection,
-                    CommandType = CommandType.Text,
-                    CommandText = "EXEC sp_executesql N'INSERT INTO " + tableName + " (" + ColumnsString + ") VALUES (" + ValueString + ")'"
-                };
                 _SqlConnection.Open();
                 _SqlCommand.ExecuteNonQuery();
                 return true;
             }
-            catch (Exception EX)
+            catch (Exception ex)
             {
-
-                throw EX;
+                throw ex;
             }
             finally
             {
                 _SqlConnection.Close();
             }
         }
-        public bool Update<T>(string tableName, string ID, T Model) where T : SQLDataModel
+        public bool Update<T>(string tableName, string id, T model) where T : SQLDataModel
         {
             try
             {
-                Dictionary<string, string> myDict = new Dictionary<string, string>();
-                Type _Type = Model.GetType();
-                foreach (PropertyInfo pi in _Type.GetProperties())
+                var setClause = string.Join(", ", typeof(T).GetProperties().Select(p => p.Name + " = @" + p.Name));
+                var query = $"UPDATE {tableName} SET {setClause} WHERE ID = @ID";
+                _SqlCommand = new SqlCommand(query, _SqlConnection);
+                _SqlCommand.Parameters.AddWithValue("@ID", id);
+                foreach (var prop in typeof(T).GetProperties())
                 {
-                    object PV = pi.GetValue(Model, null);
-                    if (PV != null)
-                    {
-                        string Value = PV?.ToString();
-                        if (pi.PropertyType == typeof(bool))
-                        {
-                            if (Value.ToLower() == "true")
-                            {
-                                Value = "1";
-                            }
-                            else
-                            {
-                                Value = "0";
-                            }
-                        }
-                        myDict.Add(pi.Name, Value);
-                    }
+                    _SqlCommand.Parameters.AddWithValue("@" + prop.Name, prop.GetValue(model) ?? DBNull.Value);
                 }
-                string field = string.Join(",", myDict.Select(x => "[" + x.Key + "]=''" + x.Value + "''").ToArray());
-                _SqlCommand = new SqlCommand()
-                {
-                    Connection = _SqlConnection,
-                    CommandType = CommandType.Text,
-                    CommandText = "EXEC sp_executesql N'UPDATE " + tableName + " SET " + field + " WHERE [ID] = N''" + ID + "'''"
-                };
                 _SqlConnection.Open();
                 _SqlCommand.ExecuteNonQuery();
                 return true;
             }
-            catch (Exception EX)
+            catch (Exception ex)
             {
-
-                throw EX;
+                throw ex;
             }
             finally
             {
                 _SqlConnection.Close();
             }
         }
-        public bool Delete(string tableName, string ID)
+        public bool Delete(string tableName, string id)
         {
             try
             {
-                _SqlCommand = new SqlCommand()
-                {
-                    Connection = _SqlConnection,
-                    CommandType = CommandType.Text,
-                    CommandText = "EXEC sp_executesql N'DELETE FROM " + tableName + "  WHERE [ID]=''" + ID + "'''"
-                };
+                var query = $"DELETE FROM {tableName} WHERE ID = @ID";
+                _SqlCommand = new SqlCommand(query, _SqlConnection);
+                _SqlCommand.Parameters.AddWithValue("@ID", id);
                 _SqlConnection.Open();
                 _SqlCommand.ExecuteNonQuery();
                 return true;
             }
-            catch (Exception EX)
+            catch (Exception ex)
             {
-
-                throw EX;
+                throw ex;
             }
             finally
             {
@@ -330,3 +281,4 @@ public class SQL
         }
     }
 }
+

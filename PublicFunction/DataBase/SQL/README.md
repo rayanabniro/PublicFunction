@@ -47,32 +47,108 @@ In this **class**, we have infrastructures that can **centrally control** the co
     	}
   ```
 
-  ## Function
-    ```C#
-    // StoredProcedureName For Execute
-    public string StoredProcedureName { get; set; }
-    // set Parameter to Execute StoredProcedure
-    public void AddParameter(string Name, SqlDbType DbType, object Data);
-    public void AddParameter(string Name, object Data);
-    public void AddParameterS<T>(T TModel) where T : SQLStoredProcedureModel;
-    // if type of StoredProcedure is inserted must use this Function.this function return true or false
-    public bool Add();
-    // if type of StoredProcedure is Selected must use this Function.this function return DataTable
-    public DataTable Select();
-    // if type of StoredProcedure is Selected must use this Function.this function return List<Dictionary<string, object>> like Json
-    public List<Dictionary<string, object>> SelectList();
-    // if type of StoredProcedure is Selected must use this Function.this function return T. T is Object
-    public T SelectModel<T>() where T : SQLDataModel;
-    // if type of StoredProcedure is lot of table must use this Function.this function return DataSet
-    public DataSet MultiSelect();
-    // if type of StoredProcedure is lot of table must use this Function.this function return List<List<Dictionary<string, object>>> like Json
-    public List<List<Dictionary<string, object>>> MultiSelectList();
-    // if type of StoredProcedure is lot of table must use this Function.this function return T. T is Object
-    public T MultiSelectModel<T>(string[] tableName) where T : SQLDataModel;
-    //if you have a model like Table can insert value in model to table
-    public bool Insert<T>(string tableName, T Model) where T : SQLDataModel;
-    //if you have a model like Table can Update value in model to table
-    public bool Update<T>(string tableName, string ID, T Model) where T : SQLDataModel;
-    //if you have a ID in Table. can Delete row
-    public bool Delete(string tableName, string ID);
- ```
+  # SQLService Documentation
+
+## Overview
+`SQLService` is a class that provides methods to interact with a SQL database using stored procedures and direct SQL commands. It implements the `ISQLService` interface.
+
+## Classes and Interfaces
+
+### SQLStoredProcedureModel
+A base class for models used in stored procedures.
+
+### SQLDataModel
+A base class for data models.
+
+### ISQLService Interface
+Defines the methods and properties for SQLService.
+
+#### Properties
+- `string StoredProcedureName { get; set; }`
+  - Gets or sets the name of the stored procedure.
+
+#### Methods
+- `void AddParameter(string Name, SqlDbType DbType, object Data)`
+  - Adds a parameter to the SQL command with a specified name, type, and value.
+
+- `void AddParameter(string Name, object Data)`
+  - Adds a parameter to the SQL command with a specified name and value.
+
+- `void AddParameterS<T>(T TModel) where T : SQLStoredProcedureModel`
+  - Adds parameters to the SQL command based on the properties of the provided model.
+
+- `bool Add()`
+  - Executes a non-query SQL command.
+
+- `DataTable Select()`
+  - Executes a query and returns the result as a DataTable.
+
+- `List<Dictionary<string, object>> SelectList()`
+  - Executes a query and returns the result as a list of dictionaries.
+
+- `T SelectModel<T>() where T : SQLDataModel`
+  - Executes a query and maps the result to a model of type `T`.
+
+- `DataSet MultiSelect()`
+  - Executes a query and returns the result as a DataSet.
+
+- `List<List<Dictionary<string, object>>> MultiSelectList()`
+  - Executes a query and returns the result as a list of lists of dictionaries.
+
+- `T MultiSelectModel<T>(string[] tableNames) where T : SQLDataModel`
+  - Executes a query and maps the result to a model of type `T` based on the specified table names.
+
+- `bool Insert<T>(string tableName, T Model) where T : SQLDataModel`
+  - Inserts a new record into the specified table using the provided model.
+
+- `bool Update<T>(string tableName, string ID, T Model) where T : SQLDataModel`
+  - Updates an existing record in the specified table using the provided model and ID.
+
+- `bool Delete(string tableName, string ID)`
+  - Deletes a record from the specified table using the provided ID.
+
+## Example Usage
+
+```csharp
+public class MyStoredProcedureModel : SQL.SQLStoredProcedureModel
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+}
+
+public class MyDataModel : SQL.SQLDataModel
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+}
+
+public void ExampleUsage(IConfiguration configuration)
+{
+    var sqlService = new SQL.SQLService(configuration);
+
+    // Setting stored procedure name
+    sqlService.StoredProcedureName = "MyStoredProcedure";
+
+    // Adding parameters
+    sqlService.AddParameter("@Id", SqlDbType.Int, 1);
+    sqlService.AddParameter("@Name", "Example");
+
+    // Executing a non-query
+    bool isAdded = sqlService.Add();
+
+    // Selecting data
+    DataTable result = sqlService.Select();
+    List<Dictionary<string, object>> resultList = sqlService.SelectList();
+    MyDataModel model = sqlService.SelectModel<MyDataModel>();
+
+    // Inserting data
+    var newModel = new MyDataModel { Id = 2, Name = "New Example" };
+    bool isInserted = sqlService.Insert("MyTable", newModel);
+
+    // Updating data
+    var updateModel = new MyDataModel { Id = 2, Name = "Updated Example" };
+    bool isUpdated = sqlService.Update("MyTable", "2", updateModel);
+
+    // Deleting data
+    bool isDeleted = sqlService.Delete("MyTable", "2");
+}
