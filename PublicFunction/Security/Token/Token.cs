@@ -10,6 +10,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using static PublicFunction.Security.Token.JWTToken;
 
 namespace PublicFunction.Security
 {
@@ -32,20 +33,51 @@ namespace PublicFunction.Security
                 JwtBuilder Create(string Issuer, string Audience, DateTime NotBefore, DateTime ExpirationTime);
                 T Decrypt<T>(string JwtToken, string Issuer, string Audience, bool ValidateLifetime, bool ValidateIssuerSigningKey) where T : TokenBaseStructure;
             }
-
-            public class HS256 : IJWTAlgorithm
+            public interface IJWTAlgorithmHS256: IJWTAlgorithm
             {
-                private string _secret;
+                public string secret { get; set; }
+            }
+            public interface IJWTAlgorithmHS384 : IJWTAlgorithm
+            {
+                public string secret { get; set; }
+            }
+            public interface IJWTAlgorithmHS512 : IJWTAlgorithm
+            {
+                public string secret { get; set; }
+            }
+            public interface IJWTAlgorithmRS256 : IJWTAlgorithm
+            {
+                public RSAParameters PrivateKey { get; set; }
+                public RSAParameters PublicKey { get; set; }
+                public string PrivateKey_XML { get; set; }
+                public string PublicKey_XML { get; set; }
+            }
+            public interface IJWTAlgorithmRS384 : IJWTAlgorithm
+            {
+                public RSAParameters PrivateKey { get; set; }
+                public RSAParameters PublicKey { get; set; }
+                public string PrivateKey_XML { get; set; }
+                public string PublicKey_XML { get; set; }
+            }
+            public interface IJWTAlgorithmRS512 : IJWTAlgorithm
+            {
+                public RSAParameters PrivateKey { get; set; }
+                public RSAParameters PublicKey { get; set; }
+                public string PrivateKey_XML { get; set; }
+                public string PublicKey_XML { get; set; }
+            }
+            public class HS256 : IJWTAlgorithmHS256
+            {
+                public string secret { get; set; }
 
-                public HS256(string secret)
+                public HS256()
                 {
-                    _secret = secret;
                 }
 
                 public JwtBuilder Create(string Issuer, string Audience, DateTime NotBefore, DateTime ExpirationTime)
                 {
                     var algorithm = new HMACSHA256Algorithm();
-                    return JwtBuilder.Create().WithAlgorithm(algorithm).WithSecret(_secret)
+                    return JwtBuilder.Create().WithAlgorithm(algorithm).WithSecret(secret)
                         .Issuer(Issuer)
                         .IssuedAt(DateTime.Now)
                         .Audience(Audience)
@@ -56,26 +88,23 @@ namespace PublicFunction.Security
                 public T Decrypt<T>(string JwtToken, string Issuer, string Audience, bool ValidateLifetime, bool ValidateIssuerSigningKey) where T : TokenBaseStructure
                 {
                     var json = JwtBuilder.Create()
-                        .WithSecret(_secret)
+                        .WithSecret(secret)
                         .MustVerifySignature()
                         .Decode(JwtToken);
                     return System.Text.Json.JsonSerializer.Deserialize<T>(json);
                 }
             }
 
-            public class HS384 : IJWTAlgorithm
+            public class HS384 : IJWTAlgorithmHS384
             {
-                private string _secret;
+                public string secret { get; set; }
 
-                public HS384(string secret)
-                {
-                    _secret = secret;
-                }
+                
 
                 public JwtBuilder Create(string Issuer, string Audience, DateTime NotBefore, DateTime ExpirationTime)
                 {
                     var algorithm = new HMACSHA384Algorithm();
-                    return JwtBuilder.Create().WithAlgorithm(algorithm).WithSecret(_secret)
+                    return JwtBuilder.Create().WithAlgorithm(algorithm).WithSecret(secret)
                         .Issuer(Issuer)
                         .IssuedAt(DateTime.Now)
                         .Audience(Audience)
@@ -86,26 +115,23 @@ namespace PublicFunction.Security
                 public T Decrypt<T>(string JwtToken, string Issuer, string Audience, bool ValidateLifetime, bool ValidateIssuerSigningKey) where T : TokenBaseStructure
                 {
                     var json = JwtBuilder.Create()
-                        .WithSecret(_secret)
+                        .WithSecret(secret)
                         .MustVerifySignature()
                         .Decode(JwtToken);
                     return System.Text.Json.JsonSerializer.Deserialize<T>(json);
                 }
             }
 
-            public class HS512 : IJWTAlgorithm
+            public class HS512 : IJWTAlgorithmHS512
             {
-                private string _secret;
+                public string secret { get; set; }
 
-                public HS512(string secret)
-                {
-                    _secret = secret;
-                }
+                
 
                 public JwtBuilder Create(string Issuer, string Audience, DateTime NotBefore, DateTime ExpirationTime)
                 {
                     var algorithm = new HMACSHA512Algorithm();
-                    return JwtBuilder.Create().WithAlgorithm(algorithm).WithSecret(_secret)
+                    return JwtBuilder.Create().WithAlgorithm(algorithm).WithSecret(secret)
                         .Issuer(Issuer)
                         .IssuedAt(DateTime.Now)
                         .Audience(Audience)
@@ -116,14 +142,14 @@ namespace PublicFunction.Security
                 public T Decrypt<T>(string JwtToken, string Issuer, string Audience, bool ValidateLifetime, bool ValidateIssuerSigningKey) where T : TokenBaseStructure
                 {
                     var json = JwtBuilder.Create()
-                        .WithSecret(_secret)
+                        .WithSecret(secret)
                         .MustVerifySignature()
                         .Decode(JwtToken);
                     return System.Text.Json.JsonSerializer.Deserialize<T>(json);
                 }
             }
 
-            public class RS256 : IJWTAlgorithm
+            public class RS256 : IJWTAlgorithmRS256
             {
                 private RSA _rsa = new RSACryptoServiceProvider(1024);
                 private RSAParameters _privateKey;
@@ -192,7 +218,7 @@ namespace PublicFunction.Security
                 }
             }
 
-            public class RS384 : IJWTAlgorithm
+            public class RS384 : IJWTAlgorithmRS384
             {
                 private RSA _rsa = new RSACryptoServiceProvider(1024);
                 private RSAParameters _privateKey;
@@ -261,7 +287,7 @@ namespace PublicFunction.Security
                 }
             }
 
-            public class RS512 : IJWTAlgorithm
+            public class RS512 : IJWTAlgorithmRS512
             {
                 private RSA _rsa = new RSACryptoServiceProvider(1024);
                 private RSAParameters _privateKey;
@@ -317,6 +343,15 @@ namespace PublicFunction.Security
                         .IssuedAt(DateTime.Now);
 
                 }
+                public T Decrypt<T>(string JwtToken, string Issuer, string Audience, bool ValidateLifetime, bool ValidateIssuerSigningKey) where T : TokenBaseStructure
+                {
+                    var json = JwtBuilder.Create()
+                        .WithAlgorithm(new RS384Algorithm(RSA.Create(_publicKey), RSA.Create(_privateKey)))
+                        .MustVerifySignature()
+                        .Decode(JwtToken);
+                    return System.Text.Json.JsonSerializer.Deserialize<T>(json);
+                }
+
             }
         }
     }
