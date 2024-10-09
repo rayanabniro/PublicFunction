@@ -122,3 +122,18 @@ var members = await redisManager.SetMembersAsync("mySet");
 ## Notes
 - Ensure that the Redis connection string is correctly configured in your application's configuration settings.
 - Use `Dispose` to close the Redis connection when it is no longer needed.
+
+## appsettings.json
+  ```json
+      {
+        "PublicFunction": {
+          "DataBase": {
+            "Redis": {
+              "RedisManager": {
+                "ConnectionString": "Redis Connection String"
+              }
+            }
+          }
+        }
+      }
+  ```
