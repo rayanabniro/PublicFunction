@@ -55,7 +55,7 @@ public class MySQLService : IMySQLService
         public MySQLService(IConfiguration configuration)
         {
             _configuration = configuration;
-            string connectionString = _configuration["PublicFunction:DataBase:MySQL:MySQLService:ConnectionString"];
+            string connectionString = _configuration["PublicFunction:DataBase:MySQL:ConnectionString"];
             _mysqlConnection = new MySqlConnection(connectionString);
         }
 
