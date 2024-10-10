@@ -12,6 +12,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
     <PackageReference Include="Microsoft.IdentityModel" Version="7.0.0" />
     <PackageReference Include="MongoDB.Driver" Version="2.29.0" />
+    <PackageReference Include="MySql.Data" Version="9.0.0" />
     <PackageReference Include="PublicFunction.DataBaseAsync" Version="2.0.6" />
     <PackageReference Include="RabbitMQ.Client" Version="6.8.1" />
     <PackageReference Include="StackExchange.Redis" Version="2.8.0" />
