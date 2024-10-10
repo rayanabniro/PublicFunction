@@ -67,7 +67,20 @@ public class HomeController : Controller
     {
         _errorHandler = errorHandler;
     }
+		public IActionResult Index()
+    {
+		    try
+			{
 
+			}
+		catch (Exception ex)
+		{
+var errorMessage = _errorHandler.GetErrorMessage(Language.en, new ArgumentNullException());
+        
+        // Use the error message for logging or displaying to the user
+		    throw ViewBag.ErrorMessage;
+		}
+    }
     public IActionResult Index()
     {
         // Add a new error in English
