@@ -57,10 +57,10 @@ namespace PublicFunction.Converter
                     {
                         return (T)(object)(input != 0); // Non-zero is true, zero is false
                     }
-                    else if (targetType == typeof(DateTime))
+                    else if (targetType == typeof(System.DateTime))
                     {
                         // Example: Consider the double input as a Unix timestamp (seconds since 1970-01-01)
-                        return (T)(object)(new DateTime(1970, 1, 1).AddSeconds(input));
+                        return (T)(object)(new System.DateTime(1970, 1, 1).AddSeconds(input));
                     }
                     else if (targetType.IsEnum)
                     {
@@ -124,9 +124,9 @@ namespace PublicFunction.Converter
                     {
                         return ((bool)(object)input) ? 1.0 : 0.0;
                     }
-                    else if (underlyingType == typeof(DateTime))
+                    else if (underlyingType == typeof(System.DateTime))
                     {
-                        return ((DateTime)(object)input).Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+                        return ((System.DateTime)(object)input).Subtract(new System.DateTime(1970, 1, 1)).TotalSeconds;
                     }
                     else
                     {

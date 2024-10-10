@@ -9,16 +9,11 @@ namespace PublicFunction.Converter.Guid
 {
     public class Guid
     {
-        using System;
-using System.Globalization;
-
-namespace Converter
-    {
         public interface IGuid
         {
-            T ConvertTo<T>(Guid input);
-            Guid ConvertFrom<T>(T input);
-            bool TryConvertTo(string input, out Guid result);
+            T ConvertTo<T>(System.Guid input);
+            System.Guid ConvertFrom<T>(T input);
+            bool TryConvertTo(string input, out System.Guid result);
         }
 
         public class GuidService : IGuid
@@ -33,7 +28,7 @@ namespace Converter
             /// <exception cref="InvalidOperationException">
             /// Thrown when the conversion fails or the type is not supported.
             /// </exception>
-            public T ConvertTo<T>(Guid input)
+            public T ConvertTo<T>(System.Guid input)
             {
                 try
                 {
@@ -74,13 +69,13 @@ namespace Converter
             /// <exception cref="InvalidOperationException">
             /// Thrown when the conversion fails or the type is not supported.
             /// </exception>
-            public Guid ConvertFrom<T>(T input)
+            public System.Guid ConvertFrom<T>(T input)
             {
                 try
                 {
                     if (input == null)
                     {
-                        return Guid.Empty; // Default value for Guid
+                        return System.Guid.Empty; // Default value for Guid
                     }
 
                     Type inputType = typeof(T);
@@ -88,11 +83,11 @@ namespace Converter
 
                     if (underlyingType == typeof(string))
                     {
-                        return Guid.Parse((string)(object)input); // Parse string to Guid
+                        return System.Guid.Parse((string)(object)input); // Parse string to Guid
                     }
                     else if (underlyingType == typeof(byte[]))
                     {
-                        return new Guid((byte[])(object)input); // Convert byte array to Guid
+                        return new System.Guid((byte[])(object)input); // Convert byte array to Guid
                     }
                     else
                     {
@@ -112,12 +107,10 @@ namespace Converter
             /// <param name="input">The string input to convert.</param>
             /// <param name="result">The converted value if successful; otherwise, the default value of Guid.</param>
             /// <returns>True if conversion is successful; otherwise, false.</returns>
-            public bool TryConvertTo(string input, out Guid result)
+            public bool TryConvertTo(string input, out System.Guid result)
             {
-                return Guid.TryParse(input, out result);
+                return System.Guid.TryParse(input, out result);
             }
         }
     }
-
-}
 }

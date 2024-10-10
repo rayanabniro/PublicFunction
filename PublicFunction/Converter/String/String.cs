@@ -97,9 +97,9 @@ namespace PublicFunction.Converter
                     {
                         return (T)(object)double.Parse(input, CultureInfo.InvariantCulture);
                     }
-                    else if (underlyingType == typeof(DateTime))
+                    else if (underlyingType == typeof(System.DateTime))
                     {
-                        return (T)(object)DateTime.Parse(input, CultureInfo.InvariantCulture);
+                        return (T)(object)System.DateTime.Parse(input, CultureInfo.InvariantCulture);
                     }
                     else if (underlyingType == typeof(bool))
                     {
@@ -117,9 +117,9 @@ namespace PublicFunction.Converter
                     {
                         return (T)(object)float.Parse(input, CultureInfo.InvariantCulture);
                     }
-                    else if (underlyingType == typeof(Guid))
+                    else if (underlyingType == typeof(System.Guid))
                     {
-                        return (T)(object)Guid.Parse(input);
+                        return (T)(object)System.Guid.Parse(input);
                     }
                     else if (underlyingType == typeof(byte))
                     {
@@ -181,9 +181,9 @@ namespace PublicFunction.Converter
                     Type inputType = typeof(T);
                     Type underlyingType = Nullable.GetUnderlyingType(inputType) ?? inputType;
 
-                    if (underlyingType == typeof(DateTime))
+                    if (underlyingType == typeof(System.DateTime))
                     {
-                        return ((DateTime)(object)input).ToString("o", CultureInfo.InvariantCulture); // ISO 8601 format
+                        return ((System.DateTime)(object)input).ToString("o", CultureInfo.InvariantCulture); // ISO 8601 format
                     }
                     else if (underlyingType.IsEnum)
                     {

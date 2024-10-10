@@ -11,9 +11,9 @@ namespace PublicFunction.Converter.DateTime
     {
         public interface IDateTime
         {
-            T ConvertTo<T>(DateTime input);
-            DateTime ConvertFrom<T>(T input);
-            bool TryConvertTo(string input, out DateTime result);
+            T ConvertTo<T>(System.DateTime input);
+            System.DateTime ConvertFrom<T>(T input);
+            bool TryConvertTo(string input, out System.DateTime result);
         }
 
         public class DateTimeService : IDateTime
@@ -28,7 +28,7 @@ namespace PublicFunction.Converter.DateTime
             /// <exception cref="InvalidOperationException">
             /// Thrown when the conversion fails or the type is not supported.
             /// </exception>
-            public T ConvertTo<T>(DateTime input)
+            public T ConvertTo<T>(System.DateTime input)
             {
                 try
                 {
@@ -44,16 +44,16 @@ namespace PublicFunction.Converter.DateTime
                     if (targetType == typeof(int))
                     {
                         // Convert DateTime to Unix timestamp (seconds since 1970-01-01)
-                        return (T)(object)(int)(input.Subtract(new DateTime(1970, 1, 1)).TotalSeconds);
+                        return (T)(object)(int)(input.Subtract(new System.DateTime(1970, 1, 1)).TotalSeconds);
                     }
                     else if (targetType == typeof(double))
                     {
                         // Convert DateTime to Unix timestamp (seconds since 1970-01-01)
-                        return (T)(object)input.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+                        return (T)(object)input.Subtract(new System.DateTime(1970, 1, 1)).TotalSeconds;
                     }
                     else if (targetType == typeof(bool))
                     {
-                        return (T)(object)(input != DateTime.MinValue); // Non-MinValue is true
+                        return (T)(object)(input != System.DateTime.MinValue); // Non-MinValue is true
                     }
                     else if (targetType.IsEnum)
                     {
@@ -81,13 +81,13 @@ namespace PublicFunction.Converter.DateTime
             /// <exception cref="InvalidOperationException">
             /// Thrown when the conversion fails or the type is not supported.
             /// </exception>
-            public DateTime ConvertFrom<T>(T input)
+            public System.DateTime ConvertFrom<T>(T input)
             {
                 try
                 {
                     if (input == null)
                     {
-                        return DateTime.MinValue;
+                        return System.DateTime.MinValue;
                     }
 
                     Type inputType = typeof(T);
@@ -95,7 +95,7 @@ namespace PublicFunction.Converter.DateTime
 
                     if (underlyingType == typeof(string))
                     {
-                        if (DateTime.TryParse((string)(object)input, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime result))
+                        if (System.DateTime.TryParse((string)(object)input, CultureInfo.InvariantCulture, DateTimeStyles.None, out System.DateTime result))
                         {
                             return result;
                         }
@@ -104,16 +104,16 @@ namespace PublicFunction.Converter.DateTime
                     else if (underlyingType == typeof(int))
                     {
                         // Convert Unix timestamp (seconds since 1970-01-01) to DateTime
-                        return new DateTime(1970, 1, 1).AddSeconds((int)(object)input);
+                        return new System.DateTime(1970, 1, 1).AddSeconds((int)(object)input);
                     }
                     else if (underlyingType == typeof(double))
                     {
                         // Convert Unix timestamp (seconds since 1970-01-01) to DateTime
-                        return new DateTime(1970, 1, 1).AddSeconds((double)(object)input);
+                        return new System.DateTime(1970, 1, 1).AddSeconds((double)(object)input);
                     }
                     else if (underlyingType == typeof(bool))
                     {
-                        return (bool)(object)input ? DateTime.Now : DateTime.MinValue;
+                        return (bool)(object)input ? System.DateTime.Now : System.DateTime.MinValue;
                     }
                     else
                     {
@@ -133,9 +133,9 @@ namespace PublicFunction.Converter.DateTime
             /// <param name="input">The string input to convert.</param>
             /// <param name="result">The converted value if successful; otherwise, DateTime.MinValue.</param>
             /// <returns>True if conversion is successful; otherwise, false.</returns>
-            public bool TryConvertTo(string input, out DateTime result)
+            public bool TryConvertTo(string input, out System.DateTime result)
             {
-                return DateTime.TryParse(input, CultureInfo.InvariantCulture, DateTimeStyles.None, out result);
+                return System.DateTime.TryParse(input, CultureInfo.InvariantCulture, DateTimeStyles.None, out result);
             }
         }
     }

@@ -169,10 +169,10 @@ namespace PublicFunction.Converter
                         {
                             dataType = "Number";
                         }
-                        else if (item is DateTime)
+                        else if (item is System.DateTime)
                         {
                             dataType = "DateTime";
-                            DateTime dt = (DateTime)item;
+                            System.DateTime dt = (System.DateTime)item;
                             dataValue = dt.ToString("s") + "Z"; // ISO 8601 format
                         }
 
