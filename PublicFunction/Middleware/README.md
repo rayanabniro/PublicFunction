@@ -366,3 +366,139 @@ app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 ### Conclusion:
 
 This Load Balancing Middleware example distributes requests across multiple backend servers using a round-robin strategy. It's a simple but effective way to scale applications and improve fault tolerance. For production systems, you may want to add more advanced features such as dynamic server lists, health checks, or retry mechanisms to improve resilience.
+
+
+
+# PublicFunction.Middleware.ApiVersioningMiddleware
+
+### API Versioning Middleware Explanation
+
+**API Versioning** is essential for managing changes in your API over time. It ensures that new versions of the API can be introduced while maintaining backward compatibility for clients using older versions. Versioning helps when you need to make breaking changes or introduce new features without disrupting existing clients.
+
+There are several common strategies for API versioning:
+
+1.  **Path-based versioning** (e.g., `/api/v1/resource`, `/api/v2/resource`)
+2.  **Query parameter versioning** (e.g., `/api/resource?version=1`)
+3.  **Header versioning** (e.g., via `Accept` headers like `application/vnd.myapi.v1+json`)
+
+In this example, we’ll implement **path-based API versioning**. This approach involves embedding the version number directly in the API's URL, making it clear which version of the API a client is accessing.
+
+### Why Use API Versioning?
+
+1.  **Backward Compatibility**: Ensures that existing clients don't break when new features are added or changes are made to the API.
+2.  **Smooth Transitions**: Clients can transition to the latest version of the API at their own pace without disrupting existing services.
+3.  **Flexibility**: Provides flexibility in deploying new API versions while maintaining old versions.
+
+### Step-by-Step Guide to Implement API Versioning Middleware:
+
+This middleware will:
+
+1.  Extract the version from the URL path (e.g., `/api/v1/resource`).
+2.  Pass the version to the controllers via `HttpContext`.
+3.  Allow controllers to use the version information to handle version-specific logic.
+
+### Explanation:
+
+1.  **Extracting the Version**:
+    
+    -   The middleware looks for a version segment in the URL path. It assumes the version will be indicated as a "v" followed by a number (e.g., `/api/v1/resource` or `/api/v2/resource`).
+    -   It extracts the version number and stores it in the `HttpContext.Items` collection, which can be accessed later by controllers or other middlewares.
+2.  **Default Versioning**:
+    
+    -   If no version is specified in the request path, the middleware defaults to version 1 (`"1"`). This can be adjusted based on your needs.
+3.  **Logging**:
+    
+    -   For debugging and tracking purposes, the version information is logged using `ILogger`.
+4.  **Passing Version Info**:
+    
+    -   The API version is saved in `HttpContext.Items["ApiVersion"]`. This allows subsequent middleware or controllers to access the version information.
+
+### How to Use the Middleware:
+
+#### Step 1: Register the Middleware in `Startup.cs`
+
+In the `Configure` method of `Startup.cs`, add the versioning middleware to the request pipeline:
+
+
+```csharp
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+{
+    // Use API versioning middleware
+    app.UseApiVersioning();
+
+    app.UseRouting();
+    app.UseAuthorization();
+
+    app.UseEndpoints(endpoints =>
+    {
+        endpoints.MapControllers();
+    });
+}
+
+```
+
+#### Step 2: Create Version-Specific Controllers
+
+You should create separate controllers for each version of your API. Here’s an example of versioned controllers:
+```csharp
+[ApiController]
+[Route("api/v1/[controller]")]
+public class ProductsV1Controller : ControllerBase
+{
+    [HttpGet]
+    public IActionResult Get()
+    {
+        return Ok(new { Message = "This is API version 1" });
+    }
+}
+
+[ApiController]
+[Route("api/v2/[controller]")]
+public class ProductsV2Controller : ControllerBase
+{
+    [HttpGet]
+    public IActionResult Get()
+    {
+        return Ok(new { Message = "This is API version 2" });
+    }
+}
+
+```
+
+### Explanation of the Controllers:
+
+-   **ProductsV1Controller**: Handles requests to `/api/v1/products`.
+-   **ProductsV2Controller**: Handles requests to `/api/v2/products`.
+
+You can extend this by having more versions (e.g., `v3`, `v4`, etc.) and create controllers that handle requests for those versions.
+
+### Example Request and Response:
+
+1.  **Request**: `GET /api/v1/products`
+    
+    -   **Response**: `{ "Message": "This is API version 1" }`
+2.  **Request**: `GET /api/v2/products`
+    
+    -   **Response**: `{ "Message": "This is API version 2" }`
+3.  **Request**: `GET /api/products` (without specifying a version)
+    
+    -   **Response**: `{ "Message": "This is API version 1" }` (defaults to version 1)
+
+### Advanced Features and Customization:
+
+1.  **Query Parameter Versioning**:
+    
+    -   You could enhance the middleware to also support query parameter versioning (e.g., `/api/products?version=1`). This is useful when you want clients to pass the version explicitly in the query string instead of the URL path.
+2.  **Header Versioning**:
+    
+    -   You can modify the middleware to check the request headers for a version (e.g., via an `Accept` header or a custom header like `X-API-Version`). This is useful in situations where you want versioning to be transparent in the URL.
+3.  **Version Negotiation**:
+    
+    -   You could implement logic that dynamically determines which version to serve based on the client's request headers or other criteria, rather than having fixed versioning paths.
+4.  **Error Handling**:
+    
+    -   If an unsupported version is requested, you can return a custom error message (e.g., `404 Not Found` or `400 Bad Request`).
+
+### Conclusion:
+
+This **API Versioning Middleware** provides a straightforward way to manage multiple versions of your API using path-based versioning. It gives clients the ability to access specific versions of the API while keeping the API backward-compatible and flexible for future changes. This approach can be extended to handle query-based or header-based versioning as needed.
