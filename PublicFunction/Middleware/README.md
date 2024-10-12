@@ -179,3 +179,100 @@ public class Startup
 -   **Rate Limit Test**: Send more than the allowed number of requests from the same IP within the rate-limiting window, and you will receive a `429 Too Many Requests` response.
 
 This middleware is an efficient way to protect your application from both malicious traffic (via blacklisting) and overloads (via rate-limiting).
+
+
+
+# PublicFunction.Middleware.RateLimitingMiddleware
+**Rate Limiting** is a technique used to control the number of requests a user can make to an API or web service within a specified time period. It helps to prevent abuse, avoid overloading the system, and ensures fair use of resources. Rate limiting can be applied to protect services from DoS (Denial of Service) attacks, prevent resource exhaustion, and manage usage quotas.
+
+For example, a service may allow only 100 requests per minute per IP address to prevent overuse of resources.
+
+### Benefits of Rate Limiting:
+
+1.  **Prevent abuse**: Protect the application from misuse or intentional abuse.
+2.  **Ensure fair usage**: Limit the number of requests per user or IP to ensure that all users have fair access to resources.
+3.  **Improve performance**: Prevent the server from being overwhelmed by too many requests in a short period.
+4.  **Protection against DDoS**: Reduce the impact of Distributed Denial of Service (DDoS) attacks.
+
+### Rate Limiting Strategies:
+
+-   **Fixed Window**: Allows a fixed number of requests in a fixed time window (e.g., 100 requests per minute).
+-   **Sliding Window**: Allows a fixed number of requests, but the window shifts over time.
+-   **Token Bucket**: Requests are allowed as long as tokens are available in a bucket. Tokens are replenished at a fixed rate.
+-   **Leaky Bucket**: Similar to token bucket, but the request rate is smoothed over time.
+
+### Rate Limiting Middleware Implementation in .NET Core
+
+In this implementation, we’ll create a **Fixed Window Rate Limiting** middleware that limits the number of requests per user (identified by IP address) within a 1-minute window.
+
+Here’s the step-by-step guide to implement a simple rate-limiting middleware.
+
+### Explanation:
+
+1.  **Request Count**: We maintain a count of requests for each IP address in memory using `IMemoryCache`. The count is incremented each time a request is received from that IP.
+2.  **Cache Key**: The cache key is generated based on the client's IP address to keep track of individual IPs.
+3.  **Request Limit**: We set a limit (e.g., 100 requests) for a 1-minute window. If a user exceeds this limit, they get a `429 Too Many Requests` HTTP status code.
+4.  **Sliding Time Window**: Each IP's request count is reset after the specified time window (in this case, 1 minute). This means that after 1 minute, the request count starts over.
+
+### How to Use:
+
+#### Step 1: Register the Middleware in `Startup.cs`
+
+To use the rate-limiting middleware, you need to register it in the `Configure` method of your `Startup.cs`.
+
+```csharp
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+{
+    // Use rate limiting middleware
+    app.UseRateLimiting();
+
+    app.UseRouting();
+    app.UseAuthorization();
+
+    app.UseEndpoints(endpoints =>
+    {
+        endpoints.MapControllers();
+    });
+}
+
+```
+#### Step 2: Configure Memory Cache in `Startup.cs`
+
+You will also need to configure the `IMemoryCache` service, which is required for storing the request count. Add the following to the `ConfigureServices` method in `Startup.cs`:
+
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddMemoryCache(); // Adds in-memory cache
+    services.AddControllers();
+}
+
+```
+
+### Example Behavior:
+
+#### Scenario 1: Within Rate Limit
+
+-   **Request**: User makes 50 requests within a minute.
+-   **Response**: The user continues to receive normal responses with a `200 OK` status.
+
+#### Scenario 2: Rate Limit Exceeded
+
+-   **Request**: User makes 101 requests within the same minute.
+-   **Response**: The user will receive a `429 Too Many Requests` response with a message like "Rate limit exceeded. Try again later."
+
+### Handling Edge Cases:
+
+1.  **Cache Expiry**: If the cache expires (after 1 minute in our case), the user's request count is reset.
+2.  **Different Clients**: Rate limiting is applied per IP address in this example, so different clients (e.g., different IP addresses) have independent limits.
+3.  **Logging**: You can log the rate-limiting events using `ILogger` to keep track of users exceeding limits.
+
+### Advanced Enhancements:
+
+1.  **Dynamic Limits**: You could enhance this middleware to allow rate limits based on user roles, specific paths, or other criteria.
+2.  **Distributed Rate Limiting**: For distributed systems with multiple instances of your application, consider using distributed caches like **Redis** to maintain the rate limit across all instances.
+
+### Conclusion:
+
+This middleware provides basic **Rate Limiting** using in-memory caching, allowing you to limit the number of requests a user can make within a specified time window. It's a useful approach for protecting APIs from abuse or overuse. You can adjust the time window and request limits as per your requirements, or extend it with more advanced strategies like distributed rate limiting if needed.
+
