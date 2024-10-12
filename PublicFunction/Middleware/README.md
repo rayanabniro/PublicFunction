@@ -276,3 +276,93 @@ public void ConfigureServices(IServiceCollection services)
 
 This middleware provides basic **Rate Limiting** using in-memory caching, allowing you to limit the number of requests a user can make within a specified time window. It's a useful approach for protecting APIs from abuse or overuse. You can adjust the time window and request limits as per your requirements, or extend it with more advanced strategies like distributed rate limiting if needed.
 
+# PublicFunction.Middleware.LoadBalancingMiddleware
+
+### Load Balancing Middleware Explanation
+
+**Load Balancing** is a technique used to distribute incoming network traffic across multiple servers or resources to ensure no single server becomes overwhelmed. It enhances application reliability, improves performance, and ensures high availability by managing traffic efficiently.
+
+In the context of a middleware implementation, **Load Balancing** typically involves redirecting incoming requests to different servers or services based on certain rules or strategies. These strategies can be **round-robin**, **least connections**, **IP hash**, or **random** among others.
+
+### Benefits of Load Balancing:
+
+1.  **Improved Scalability**: By distributing traffic across multiple servers, you can handle more concurrent requests.
+2.  **Fault Tolerance**: If one server goes down, the traffic is redirected to other healthy servers, ensuring high availability.
+3.  **Optimized Performance**: Load balancing helps in reducing latency and optimizing resource usage.
+
+### Load Balancing Strategies:
+
+1.  **Round-robin**: Distributes requests equally among servers in a cyclic manner.
+2.  **Least connections**: Directs requests to the server with the fewest active connections.
+3.  **IP Hash**: Uses the client's IP address to determine which server to route the request to.
+4.  **Weighted Distribution**: Assigns weights to servers based on their capacity, and routes traffic accordingly.
+
+### Load Balancing Middleware Implementation in .NET Core
+
+In this example, we'll implement a **Round-robin load balancing middleware** that distributes incoming requests across multiple backend servers. The backend servers could be a list of IPs or URLs to which requests are routed.
+
+
+### Explanation:
+
+1.  **Backend Servers**:
+    
+    -   A list of backend servers (`_backendServers`) is maintained. These can be local IPs or URLs pointing to different instances of your service.
+    -   In the example, three local servers (e.g., `localhost:5001`, `localhost:5002`, etc.) are used, but in production, these could be load balancers or service instances deployed in a cloud environment.
+2.  **Round-Robin Strategy**:
+    
+    -   The middleware selects the next server in the list based on a round-robin strategy. Each time a request comes in, the server index (`_currentServerIndex`) is incremented, and it loops back when it reaches the end of the list.
+3.  **Forwarding the Request**:
+    
+    -   The middleware uses `HttpClient` to forward the incoming request to the selected backend server.
+    -   It copies the request method, headers, and body from the original request to the forwarded request.
+    -   The backend server's response is then copied back to the original response, including the status code and headers.
+4.  **Error Handling**:
+    
+    -   This basic implementation does not include error handling, but in a production environment, you might want to implement fallback mechanisms, such as retrying requests on another server if one fails.
+
+### How to Use the Middleware:
+
+#### Step 1: Register the Middleware in `Startup.cs`
+
+To use the load balancing middleware, add it to the middleware pipeline in the `Configure` method of your `Startup.cs`:
+
+```csharp
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env) 
+{ 
+// Use the Load Balancing Middleware 
+app.UseLoadBalancing(); 
+app.UseRouting(); 
+app.UseAuthorization(); 
+app.UseEndpoints(endpoints => { endpoints.MapControllers(); }); 
+}
+```
+#### Step 2: Configure Backend Servers
+
+-   Modify the list of backend servers in the `LoadBalancingMiddleware` to include the actual addresses of your application servers.
+-   In a production environment, these might be IP addresses or service endpoints behind a load balancer or containerized microservices.
+
+### Example Behavior:
+
+1.  **Request**: A client makes an HTTP request to your application.
+2.  **Load Balancing**: The load balancing middleware selects the next server from the list using a round-robin approach.
+3.  **Forwarding**: The middleware forwards the request to the chosen server.
+4.  **Response**: The response from the backend server is forwarded back to the client.
+
+### Advanced Enhancements:
+
+1.  **Dynamic Server List**:
+    
+    -   Instead of hardcoding the list of backend servers, you could pull it from a configuration file, database, or service registry (e.g., Consul, Eureka).
+2.  **Health Checks**:
+    
+    -   Implement health checks to ensure that only healthy servers are included in the list. This way, the load balancer can skip over servers that are down or experiencing issues.
+3.  **Weighted Load Balancing**:
+    
+    -   Implement a weighted round-robin approach where certain servers handle more requests than others based on their capacity (e.g., a more powerful server can handle more traffic).
+4.  **Failover and Retry Logic**:
+    
+    -   Add failover support. If a server fails or responds with an error, the middleware can retry the request on another server.
+
+### Conclusion:
+
+This Load Balancing Middleware example distributes requests across multiple backend servers using a round-robin strategy. It's a simple but effective way to scale applications and improve fault tolerance. For production systems, you may want to add more advanced features such as dynamic server lists, health checks, or retry mechanisms to improve resilience.
