@@ -624,3 +624,132 @@ public class ProductsController : ControllerBase
 ### Conclusion:
 
 This **Asynchronous Processing Middleware** allows you to handle long-running tasks without blocking the server thread, improving the scalability and performance of your application. The example provided simulates a long-running task, but in a real application, this middleware can be adapted to handle tasks such as database queries, file I/O, or calls to external services asynchronously. This approach enhances the responsiveness of your API, ensuring that multiple requests can be processed concurrently without being delayed by slow operations.
+
+
+
+# PublicFunction.Middleware.WebSocketMiddleware
+
+### WebSocket Middleware Explanation
+
+**WebSocket** is a protocol that provides full-duplex communication channels over a single, long-lived TCP connection. It enables real-time, two-way interaction between a client (such as a browser) and a server, which is useful for applications that require live data, such as chat applications, real-time notifications, or live updates.
+
+WebSocket is different from the traditional HTTP protocol because it allows the client and server to send data to each other at any time without the need for multiple HTTP requests and responses. Once a WebSocket connection is established, both the client and server can send messages to each other without waiting for the other to request data.
+
+### Why Use WebSocket Middleware?
+
+1.  **Real-Time Communication**: WebSocket allows for real-time, interactive communication between the server and the client.
+2.  **Efficient**: Since WebSocket maintains a persistent connection, there is no need to repeatedly establish new connections (as in HTTP requests), reducing overhead.
+3.  **Low Latency**: WebSocket is ideal for applications that require low-latency communication, such as chat applications, online gaming, and live data feeds.
+4.  **Bidirectional Communication**: Both the server and client can send data to each other simultaneously.
+
+### WebSocket Middleware Implementation in .NET Core
+
+In this example, we will implement **WebSocket Middleware** to handle WebSocket connections and send/receive messages.
+
+### Explanation:
+
+1.  **WebSocket Request Handling**:
+    
+    -   The `InvokeAsync` method checks if the incoming request is a WebSocket request using `context.WebSockets.IsWebSocketRequest`. If it's not a WebSocket request, the request is passed to the next middleware in the pipeline.
+    -   If it's a WebSocket request, the connection is accepted via `AcceptWebSocketAsync()`, and the connection is passed to `HandleWebSocketCommunication()` to manage the WebSocket interaction.
+2.  **Handling WebSocket Communication**:
+    
+    -   The `HandleWebSocketCommunication` method continuously reads messages from the WebSocket connection using `ReceiveAsync` and writes responses back to the client using `SendAsync`.
+    -   The `ReceiveAsync` method receives data from the WebSocket. If the message type is `Text`, it processes the message and sends an echo back to the client. If the message type is `Close`, the connection is closed.
+3.  **Error Handling**:
+    
+    -   Errors that occur during WebSocket communication are logged with the `ILogger`, and the WebSocket connection is gracefully closed if an exception occurs.
+4.  **Buffering**:
+    
+    -   A buffer of size `1024 * 4` is used for receiving data. You can adjust the buffer size based on your application’s needs.
+
+### How to Use the WebSocket Middleware:
+
+#### Step 1: Register the WebSocket Middleware in `Startup.cs`
+
+In the `Configure` method of `Startup.cs`, enable WebSocket support and register the middleware:
+```csharp
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+{
+    // Enable WebSocket support
+    var options = new WebSocketOptions
+    {
+        KeepAliveInterval = TimeSpan.FromSeconds(120),  // Set the WebSocket keep-alive interval
+        ReceiveBufferSize = 1024 * 4  // Buffer size
+    };
+
+    app.UseWebSockets(options);
+
+    // Use WebSocket middleware
+    app.UseWebSocketMiddleware();
+
+    app.UseRouting();
+    app.UseAuthorization();
+
+    app.UseEndpoints(endpoints =>
+    {
+        endpoints.MapControllers();
+    });
+}
+
+```
+
+#### Step 2: Creating WebSocket Clients
+
+You can test your WebSocket implementation by creating a simple WebSocket client. Here's an example using JavaScript in a browser:
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Client</title>
+    <script>
+        var socket = new WebSocket("ws://localhost:5000/api/socket");
+
+        // When WebSocket connection is established
+        socket.onopen = function(event) {
+            console.log("WebSocket connection established");
+            socket.send("Hello from client!");
+        };
+
+        // When receiving a message from the server
+        socket.onmessage = function(event) {
+            console.log("Message from server: ", event.data);
+        };
+
+        // When WebSocket connection is closed
+        socket.onclose = function(event) {
+            console.log("WebSocket connection closed");
+        };
+    </script>
+</head>
+<body>
+    <h1>WebSocket Client</h1>
+</body>
+</html>
+
+```
+In the above example, the client connects to the WebSocket server at `ws://localhost:5000/api/socket`. Once the connection is open, it sends a message to the server, and the server echoes the message back.
+
+### Example Request and Response:
+
+-   **Request**: Client sends the message `"Hello from client!"`.
+-   **Server Response**: Server sends the message `"Echo: Hello from client!"` back to the client.
+
+### Advanced Features and Customization:
+
+1.  **Broadcasting Messages**:
+    
+    -   You can extend the middleware to broadcast messages to all connected clients. Maintain a list of active WebSocket connections and send messages to all clients when one of them sends a message.
+2.  **Message Validation**:
+    
+    -   Add message validation or filtering to ensure only valid messages are processed, or reject malicious content or malformed data.
+3.  **Authentication and Authorization**:
+    
+    -   You can apply authentication or authorization checks before accepting the WebSocket connection. For instance, you could check that the client has a valid token before establishing the WebSocket connection.
+4.  **Graceful Shutdown**:
+    
+    -   Implement a graceful shutdown of WebSocket connections when the server shuts down. This ensures that clients receive a proper closure message and the connection is cleanly closed.
+
+### Conclusion:
+
+This **WebSocket Middleware** allows for real-time, two-way communication between clients and the server using the WebSocket protocol. It’s ideal for use cases that require low-latency communication, such as live updates, chat applications, or real-time data feeds. The implementation shown provides basic WebSocket handling, and you can extend it to include features like broadcasting, message validation, or even secure WebSocket connections using SSL/TLS.
