@@ -92,3 +92,90 @@ Configuration:
     The JwtSettings (like SecretKey, Issuer, and Audience) are retrieved from the configuration, allowing the developer to set them based on their environment or application settings.
 
 This example provides a robust and customizable way to manage authentication and authorization in .NET Core applications.
+
+
+# PublicFunction.Middleware.FirewallAntiDdosMiddleware
+
+### Firewall & Anti-DDoS Middleware Explanation:
+
+**Firewall** and **Anti-DDoS (Distributed Denial of Service)** protection are essential components in securing web applications from malicious attacks and excessive traffic that could degrade or disrupt the service. These measures are designed to filter out harmful requests, block traffic from known bad sources, and limit traffic that exceeds acceptable thresholds.
+
+-   **Firewall**: Acts as a filter between trusted internal networks and untrusted external networks, usually blocking access to certain IPs, ports, or services. It inspects incoming requests and applies rules that define which traffic is allowed and which is blocked.
+    
+-   **Anti-DDoS**: Refers to techniques used to mitigate DDoS attacks, where an attacker floods a service with an overwhelming amount of requests, aiming to exhaust server resources and cause downtime. Anti-DDoS middleware typically limits the rate of requests from the same IP or restricts excessive connections in a short time period.
+    
+
+### Features of Firewall & Anti-DDoS Middleware:
+
+1.  **IP Whitelisting/Blacklisting**: Allows specific trusted IPs to access your application while blocking malicious or unwanted IPs.
+2.  **Rate Limiting**: Limits the number of requests a client can make in a given time window (e.g., 100 requests per minute).
+3.  **Request Filtering**: Filters out requests that contain malicious payloads or are formatted incorrectly.
+4.  **Traffic Monitoring**: Monitors traffic patterns and detects sudden spikes or patterns that might indicate a DDoS attack.
+5.  **Geo-blocking**: Blocks or limits traffic based on the geographic location of the IP address.
+
+### Middleware Code for Firewall & Anti-DDoS in .NET Core
+
+Here’s how you can implement a **Firewall & Anti-DDoS** middleware in .NET Core. This middleware will allow you to:
+
+-   Block specific IPs.
+-   Rate-limit requests from the same IP address.
+-   Track traffic patterns to mitigate DDoS attacks.
+
+
+### How It Works:
+
+1.  **Blocked IPs**: The middleware checks whether the incoming request comes from a blacklisted IP. If the IP is blocked, a `403 Forbidden` response is sent.
+    
+2.  **Rate Limiting**:
+    
+    -   It tracks the number of requests each IP has made within a certain time window (1 minute in this example).
+    -   If an IP exceeds the defined limit (e.g., 100 requests per minute), the middleware returns a `429 Too Many Requests` response.
+    -   The request count is reset after the time window (1 minute) expires.
+3.  **Logging**: Each time a request is blocked or rate-limited, a log entry is created for monitoring and debugging purposes.
+    
+
+### Configuration in `Startup.cs`:
+
+You need to configure the middleware in the `Configure` method of `Startup.cs`:
+
+```csharp
+public class Startup
+{
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        if (env.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+        }
+
+        // Use the firewall and anti-DDoS middleware
+        app.UseFirewallAntiDdos();
+
+        app.UseRouting();
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+        });
+    }
+}
+
+```
+
+### Explanation of the Middleware:
+
+-   **Blocked IPs**: In the `IsBlacklisted` method, you can maintain an array or list of blocked IPs. If a request is made from one of these IPs, it is denied access.
+-   **Rate Limiting**: In the `RateLimitRequest` method, the middleware increments a request count for each IP. If the number of requests exceeds the limit, it blocks further requests for that time window.
+-   **Logging**: Every time a request is blocked due to being blacklisted or exceeding the rate limit, a log message is generated.
+
+### Additional Features (optional):
+
+-   **Geolocation-based Blocking**: Use a service like [IPstack](https://ipstack.com/) to determine the geographical location of IP addresses and block traffic from specific countries or regions.
+-   **Dynamic Blacklist**: You can implement a more sophisticated system where IPs are dynamically added to the blacklist based on abnormal traffic patterns.
+
+### Testing:
+
+-   **Blacklisted IP Test**: Send a request from an IP in the blacklist, and you should receive a `403 Forbidden` response.
+-   **Rate Limit Test**: Send more than the allowed number of requests from the same IP within the rate-limiting window, and you will receive a `429 Too Many Requests` response.
+
+This middleware is an efficient way to protect your application from both malicious traffic (via blacklisting) and overloads (via rate-limiting).
