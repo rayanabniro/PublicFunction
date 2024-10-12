@@ -753,3 +753,188 @@ In the above example, the client connects to the WebSocket server at `ws://local
 ### Conclusion:
 
 This **WebSocket Middleware** allows for real-time, two-way communication between clients and the server using the WebSocket protocol. It’s ideal for use cases that require low-latency communication, such as live updates, chat applications, or real-time data feeds. The implementation shown provides basic WebSocket handling, and you can extend it to include features like broadcasting, message validation, or even secure WebSocket connections using SSL/TLS.
+
+
+# PublicFunction.Middleware.SignalRMiddleware
+### SignalR Middleware Explanation
+
+**SignalR** is a .NET library that simplifies adding real-time web functionality to your applications. Real-time functionality means that the server can push content to connected clients instantly as it becomes available, without the client having to request it. SignalR enables bi-directional communication between server and client, allowing features such as live notifications, chat systems, real-time updates, and more.
+
+SignalR abstracts many of the complexities associated with real-time communication protocols (like WebSockets) and provides fallback mechanisms for environments where WebSockets are not available, using technologies such as **Long Polling**, **Server-Sent Events**, or **Forever Frame**.
+
+SignalR is widely used in applications like:
+
+-   **Live chat** applications
+-   **Online gaming** applications
+-   **Real-time notifications** (e.g., push notifications in a social network)
+-   **Collaborative applications** (e.g., shared document editing)
+
+### Why Use SignalR Middleware?
+
+1.  **Real-Time Communication**: Send updates to clients in real-time without the need for polling.
+2.  **Simplified Implementation**: SignalR abstracts the complexities of dealing with WebSockets, server-sent events, or long polling.
+3.  **Broad Browser Support**: SignalR automatically chooses the best transport method for the client's environment, ensuring compatibility with many different browsers and devices.
+4.  **Scalable**: SignalR supports the ability to scale out, so you can add more servers to handle more clients.
+
+### SignalR Middleware Implementation in .NET Core
+
+To use **SignalR Middleware**, we will first implement SignalR in the application, define a `Hub` (a central point for communication), and integrate SignalR into the pipeline via middleware.
+
+### Step-by-Step Guide to Implement SignalR Middleware:
+
+#### Step 1: Install SignalR NuGet Package
+
+First, ensure that you have the SignalR package installed in your project.
+
+Run the following command in the Package Manager Console:
+```bash
+dotnet add package Microsoft.AspNetCore.SignalR
+```
+
+#### Step 2: Define a SignalR Hub
+
+A **Hub** is a class that clients can call methods on, and that can send messages to clients. It’s the core of real-time communication in SignalR.
+```csharp
+using Microsoft.AspNetCore.SignalR;
+
+public class ChatHub : Hub
+{
+    public async Task SendMessage(string user, string message)
+    {
+        // Sends a message to all connected clients
+        await Clients.All.SendAsync("ReceiveMessage", user, message);
+    }
+}
+
+```
+### Step 3: Configure SignalR in `Startup.cs`
+
+In the `Configure` method of `Startup.cs`, you need to register SignalR and use the SignalR middleware.
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    // Add SignalR services to the DI container
+    services.AddSignalR();
+}
+
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+{
+    // Use SignalR middleware
+    app.UseSignalRMiddleware();
+
+    // Other middleware configurations
+    app.UseRouting();
+
+    app.UseEndpoints(endpoints =>
+    {
+        // Map the SignalR Hub route
+        endpoints.MapHub<ChatHub>("/chatHub");
+    });
+}
+
+```
+### Step 4: Implement Client-Side JavaScript for SignalR
+
+You can interact with SignalR from the client side using JavaScript. Here’s an example of how a simple chat client can send and receive messages via SignalR:
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SignalR Chat</title>
+    <script src="https://cdn.jsdelivr.net/npm/@microsoft/signalr@3.1.8/dist/browser/signalr.min.js"></script>
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/chatHub")
+            .build();
+
+        // Receive messages from the server
+        connection.on("ReceiveMessage", function (user, message) {
+            const msg = `${user}: ${message}`;
+            const li = document.createElement("li");
+            li.textContent = msg;
+            document.getElementById("messagesList").appendChild(li);
+        });
+
+        // Start the connection
+        async function start() {
+            try {
+                await connection.start();
+                console.log("SignalR connected!");
+            } catch (err) {
+                console.error(err);
+                setTimeout(() => start(), 5000);
+            }
+        }
+
+        connection.onclose(() => start());
+
+        // Send message to server
+        function sendMessage() {
+            const user = document.getElementById("userInput").value;
+            const message = document.getElementById("messageInput").value;
+            connection.invoke("SendMessage", user, message).catch(err => console.error(err.toString()));
+            document.getElementById("messageInput").value = '';
+        }
+
+        start();
+    </script>
+</head>
+<body>
+    <ul id="messagesList"></ul>
+    <input type="text" id="userInput" placeholder="Enter your name" />
+    <input type="text" id="messageInput" placeholder="Enter message" />
+    <button onclick="sendMessage()">Send</button>
+</body>
+</html>
+
+```
+### Explanation:
+
+-   **SignalR Hub**: The `ChatHub` class defines a method `SendMessage` that sends messages to all connected clients using `Clients.All.SendAsync`.
+-   **Middleware**: The `SignalRMiddleware` logs each request that passes through it, providing a basic example of how you can handle SignalR-specific requests in middleware. This middleware is optional, but it can be useful for logging or other pre-processing.
+-   **Client-Side**: The JavaScript code on the client side connects to the SignalR Hub and listens for messages. It sends a message to the Hub when the user submits a message through the form.
+
+### How to Use the Middleware:
+
+1.  **WebSocket and HTTP Transport**: SignalR will automatically use WebSockets if they are supported in the client and server. If WebSockets are not available, it will fall back to other transport mechanisms such as Long Polling.
+2.  **SignalR Connection**: On the client side, the connection to the SignalR hub is created using `new signalR.HubConnectionBuilder().withUrl("/chatHub")`, and you can start the connection with `await connection.start()`.
+
+### Example Request and Response:
+
+-   **Client Message**: User sends a message like `"Hello, world!"`.
+-   **Server Action**: The `SendMessage` method on the server is invoked, and the message is broadcast to all connected clients.
+-   **Client Response**: All connected clients receive the message in real time and append it to their message list.
+
+### Advanced Features and Customization:
+
+1.  **Authentication and Authorization**: You can apply authentication and authorization to SignalR hubs to restrict access to certain users or roles. For example:
+
+```csharp
+public class ChatHub : Hub
+{
+    public override Task OnConnectedAsync()
+    {
+        if (!Context.User.Identity.IsAuthenticated)
+        {
+            throw new UnauthorizedAccessException("You must be authenticated to connect.");
+        }
+
+        return base.OnConnectedAsync();
+    }
+}
+
+```
+2. **Group Management**: SignalR supports grouping users into groups. This allows you to send messages to a subset of clients rather than all clients.
+```csharp
+public async Task AddToGroup(string groupName)
+{
+    await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+}
+```
+3.   **Broadcasting to Specific Clients**: You can broadcast messages to specific clients or groups using `Clients.Group`, `Clients.Client`, or `Clients.User` for more targeted communication.
+    
+
+### Conclusion:
+
+**SignalR Middleware** allows you to implement real-time web functionality easily in your ASP.NET Core application. It enables two-way communication between server and client without the overhead of repeated HTTP requests. With features like automatic transport selection, group management, and real-time message broadcasting, SignalR is powerful for building applications that require instant updates and live data feeds.
+
