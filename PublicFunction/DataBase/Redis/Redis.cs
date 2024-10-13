@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ public class Redis
         void Set(string key, object value, TimeSpan expiration);
         bool Exists(string key);
         bool Delete(string key);
-
+        public IEnumerable<string> GetAllKeys(string pattern = "*");
         // Additional Redis operations
         Task<bool> HashExistsAsync(string hashKey, string field);
         Task<T> HashGetAsync<T>(string hashKey, string field);
@@ -80,6 +80,36 @@ public class Redis
         public bool Delete(string key)
         {
             return _redis.Value.GetDatabase().KeyDelete(key);
+        }
+        public IEnumerable<string> GetAllKeys(string pattern = "*")
+        {
+            try
+            {
+                var endpoints = Connection.GetEndPoints();
+                var keys = new List<string>();
+
+                foreach (var endpoint in endpoints)
+                {
+                    var server = Connection.GetServer(endpoint);
+
+                    // بررسی کنید که سرور قابل خواندن است
+                    if (!server.IsConnected)
+                        continue;
+
+                    // استفاده از SCAN به جای KEYS برای بهبود کارایی
+                    foreach (var key in server.Keys(pattern: pattern, pageSize: 1000))
+                    {
+                        keys.Add(key);
+                    }
+                }
+
+                return keys;
+            }
+            catch (Exception ex)
+            {
+                // بهتر است از throw; به جای throw ex; استفاده کنید تا استک ترейс اصلی حفظ شود
+                throw;
+            }
         }
 
         // Additional Redis Hash Operations
