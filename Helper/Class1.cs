@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace PublicFunction.Helper
 {
-    
+
     public interface IErrorHandler
     {
-        
+
         Dictionary<ErrorHandler.Language, List<ErrorHandler.Error>> GetErrors();
         bool CleanErrors();
         bool AddError(ErrorHandler.Language language, List<ErrorHandler.Error> errors);
