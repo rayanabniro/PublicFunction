@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace PublicFunction.Converter
 {
@@ -12,17 +8,18 @@ namespace PublicFunction.Converter
         public T Deserialize<T>(string json);
         public string Serialize<T>(T obj);
     }
+
     public class Json : IJson
     {
         public T Deserialize<T>(string json)
         {
             try
             {
-                return JsonConvert.DeserializeObject<T>(json);
+                return JsonSerializer.Deserialize<T>(json);
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new InvalidOperationException("Error deserializing JSON.", ex);
             }
         }
 
@@ -30,11 +27,11 @@ namespace PublicFunction.Converter
         {
             try
             {
-                return JsonConvert.SerializeObject(obj);
+                return JsonSerializer.Serialize(obj, new JsonSerializerOptions { WriteIndented = true });
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new InvalidOperationException("Error serializing object to JSON.", ex);
             }
         }
     }

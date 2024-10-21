@@ -1,26 +1,25 @@
-﻿using System.Collections.Generic;
-using System.Data;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Xml;
-using Newtonsoft.Json;
 
 namespace PublicFunction.Converter
 {
     public interface IDataSetConverter
     {
-        string DataSetToJson(DataSet dataSet);
-        List<List<Dictionary<string, object>>> DataSetToList(DataSet dataSet);
-        List<List<Dictionary<string, object>>> DataSetToList(ref DataSet dataSet);
-        string DataSetToXml(DataSet dataSet);
-        string DataSetToCsv(DataSet dataSet, string delimiter = ",");
-        byte[] DataSetToExcel(DataSet dataSet);
-        string DataSetToHtml(DataSet dataSet);
+        string DataSetToJson(System.Data.DataSet dataSet);
+        List<List<Dictionary<string, object>>> DataSetToList(System.Data.DataSet dataSet);
+        List<List<Dictionary<string, object>>> DataSetToList(ref System.Data.DataSet dataSet);
+        string DataSetToXml(System.Data.DataSet dataSet);
+        string DataSetToCsv(System.Data.DataSet dataSet, string delimiter = ",");
+        byte[] DataSetToExcel(System.Data.DataSet dataSet);
+        string DataSetToHtml(System.Data.DataSet dataSet);
     }
+
     public class DataSetConverter : IDataSetConverter
     {
         /// <summary>
@@ -31,7 +30,12 @@ namespace PublicFunction.Converter
             if (dataSet == null)
                 throw new ArgumentNullException(nameof(dataSet), "DataSet cannot be null.");
 
-            return JsonConvert.SerializeObject(dataSet, Newtonsoft.Json.Formatting.Indented);
+            var dict = DataSetToList(dataSet);
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = true
+            };
+            return JsonSerializer.Serialize(dict, options);
         }
 
         /// <summary>
@@ -83,7 +87,6 @@ namespace PublicFunction.Converter
 
             using (StringWriter sw = new StringWriter())
             {
-                // Removed the third parameter 'false' as it may not be supported
                 dataSet.WriteXml(sw, XmlWriteMode.IgnoreSchema);
                 return sw.ToString();
             }
@@ -101,15 +104,12 @@ namespace PublicFunction.Converter
 
             foreach (DataTable table in dataSet.Tables)
             {
-                // Add table name as a header
                 sb.AppendLine($"Table: {table.TableName}");
 
-                // Add column headers
                 IEnumerable<string> columnNames = table.Columns.Cast<DataColumn>()
                     .Select(column => EscapeCsvValue(column.ColumnName, delimiter));
                 sb.AppendLine(string.Join(delimiter, columnNames));
 
-                // Add rows
                 foreach (DataRow row in table.Rows)
                 {
                     IEnumerable<string> fields = row.ItemArray
@@ -117,7 +117,7 @@ namespace PublicFunction.Converter
                     sb.AppendLine(string.Join(delimiter, fields));
                 }
 
-                sb.AppendLine(); // Empty line to separate tables
+                sb.AppendLine(); 
             }
 
             return sb.ToString();
@@ -144,7 +144,6 @@ namespace PublicFunction.Converter
                 sb.AppendLine($"  <Worksheet ss:Name=\"{EscapeXml(table.TableName)}\">");
                 sb.AppendLine("    <Table>");
 
-                // Add column headers
                 sb.AppendLine("      <Row>");
                 foreach (DataColumn column in table.Columns)
                 {
@@ -152,7 +151,6 @@ namespace PublicFunction.Converter
                 }
                 sb.AppendLine("      </Row>");
 
-                // Add rows
                 foreach (DataRow row in table.Rows)
                 {
                     sb.AppendLine("      <Row>");
@@ -173,7 +171,7 @@ namespace PublicFunction.Converter
                         {
                             dataType = "DateTime";
                             System.DateTime dt = (System.DateTime)item;
-                            dataValue = dt.ToString("s") + "Z"; // ISO 8601 format
+                            dataValue = dt.ToString("s") + "Z";
                         }
 
                         sb.AppendLine($"        <Cell><Data ss:Type=\"{dataType}\">{dataValue}</Data></Cell>");
@@ -205,7 +203,6 @@ namespace PublicFunction.Converter
                 sb.AppendLine($"<h2>{System.Net.WebUtility.HtmlEncode(table.TableName)}</h2>");
                 sb.AppendLine("<table border='1' cellpadding='5' cellspacing='0'>");
 
-                // Add table headers
                 sb.AppendLine("<thead><tr>");
                 foreach (DataColumn column in table.Columns)
                 {
@@ -213,7 +210,6 @@ namespace PublicFunction.Converter
                 }
                 sb.AppendLine("</tr></thead>");
 
-                // Add table rows
                 sb.AppendLine("<tbody>");
                 foreach (DataRow row in table.Rows)
                 {
@@ -232,9 +228,6 @@ namespace PublicFunction.Converter
             return sb.ToString();
         }
 
-        /// <summary>
-        /// Escapes a value for CSV format.
-        /// </summary>
         private string EscapeCsvValue(string value, string delimiter)
         {
             if (value.Contains(delimiter) || value.Contains("\"") || value.Contains("\n"))
@@ -244,9 +237,6 @@ namespace PublicFunction.Converter
             return value;
         }
 
-        /// <summary>
-        /// Escapes special characters for XML.
-        /// </summary>
         private string EscapeXml(string value)
         {
             return System.Security.SecurityElement.Escape(value);
