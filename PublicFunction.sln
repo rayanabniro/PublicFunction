@@ -5,9 +5,11 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PublicFunction", "PublicFunction\PublicFunction.csproj", "{C370F553-7F04-421E-9D7D-1AAAF2FD68C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SessionManagement", "SessionManagement\SessionManagement.csproj", "{61820553-D35B-4284-960C-F377624AC50E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PublicFunction.SessionManagement", "SessionManagement\PublicFunction.SessionManagement.csproj", "{61820553-D35B-4284-960C-F377624AC50E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helper", "Helper\Helper.csproj", "{CC978B87-1D5C-481F-8446-429F2A581DE8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PublicFunction.Helper", "Helper\PublicFunction.Helper.csproj", "{CC978B87-1D5C-481F-8446-429F2A581DE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PublicFunction.Middleware", "PublicFunction.Middleware\PublicFunction.Middleware.csproj", "{34D1253F-06A5-4B87-A387-821BD04E5DD3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{CC978B87-1D5C-481F-8446-429F2A581DE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC978B87-1D5C-481F-8446-429F2A581DE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC978B87-1D5C-481F-8446-429F2A581DE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34D1253F-06A5-4B87-A387-821BD04E5DD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34D1253F-06A5-4B87-A387-821BD04E5DD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34D1253F-06A5-4B87-A387-821BD04E5DD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34D1253F-06A5-4B87-A387-821BD04E5DD3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
