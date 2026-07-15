@@ -16,6 +16,7 @@ namespace PublicFunction.AsyncDataBase
         public interface ISQLServiceAsync
         {
             string StoredProcedureName { get; set; }
+            string Query { get; set; }
             void AddParameter(string Name, SqlDbType DbType, object Data);
             void AddParameter(string Name, object Data);
             void AddParameterS<T>(T TModel) where T : SQLStoredProcedureModel;
@@ -29,6 +30,8 @@ namespace PublicFunction.AsyncDataBase
             Task<bool> InsertAsync<T>(string tableName, T Model) where T : SQLDataModel;
             Task<bool> UpdateAsync<T>(string tableName, string ID, T Model) where T : SQLDataModel;
             Task<bool> DeleteAsync(string tableName, string ID);
+
+            Task<T> ExecuteScalar<T>();
         }
 
         public class SQLServiceAsync : ISQLServiceAsync
@@ -55,6 +58,15 @@ namespace PublicFunction.AsyncDataBase
                 {
                     _sqlCommand.CommandText = value;
                     _sqlCommand.CommandType = CommandType.StoredProcedure;
+                }
+            }
+            public string Query
+            {
+                get => _sqlCommand.CommandText;
+                set
+                {
+                    _sqlCommand.CommandText = value;
+                    _sqlCommand.CommandType = CommandType.Text; // اصلاح شده
                 }
             }
 
@@ -312,6 +324,27 @@ namespace PublicFunction.AsyncDataBase
                 catch (Exception ex)
                 {
                     throw new Exception($"Error deleting from {tableName}", ex);
+                }
+            }
+            public async Task<T> ExecuteScalar<T>()
+            {
+                try
+                {
+                    var dt = await SelectAsync();
+
+                    if (dt.Rows.Count == 0 || dt.Columns.Count == 0)
+                        return default;
+
+                    var value = dt.Rows[0][0];
+
+                    if (value == null || value == DBNull.Value)
+                        return default;
+
+                    return (T)Convert.ChangeType(value, typeof(T));
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Error executing scalar query: {ex.Message}", ex);
                 }
             }
         }
