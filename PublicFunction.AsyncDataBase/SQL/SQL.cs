@@ -31,7 +31,6 @@ namespace PublicFunction.AsyncDataBase
             Task<bool> UpdateAsync<T>(string tableName, string ID, T Model) where T : SQLDataModel;
             Task<bool> DeleteAsync(string tableName, string ID);
 
-            Task<T> ExecuteScalar<T>();
         }
 
         public class SQLServiceAsync : ISQLServiceAsync
@@ -326,44 +325,7 @@ namespace PublicFunction.AsyncDataBase
                     throw new Exception($"Error deleting from {tableName}", ex);
                 }
             }
-            public async Task<T> ExecuteScalar<T>()
-            {
-                try
-                {
-                    var dt = await SelectAsync();
-
-                    if (dt.Rows.Count == 0 || dt.Columns.Count == 0)
-                        return default;
-
-                    var value = dt.Rows[0][0];
-
-                    if (value == null || value == DBNull.Value)
-                        return default;
-
-                    if (value is T result)
-                        return result;
-
-                    if (typeof(T) == typeof(string))
-                        return value.ToString();
-
-                    if (typeof(T) == typeof(Guid) || typeof(T) == typeof(Guid?))
-                    {
-                        return Guid.Parse(value.ToString());
-                    }
-                    try
-                    {
-                        return Convert.ChangeType(value, typeof(T));
-                    }
-                    catch
-                    {
-                        return value;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception($"Error executing scalar query: {ex.Message}", ex);
-                }
-            }
+            
         }
     }
 }
