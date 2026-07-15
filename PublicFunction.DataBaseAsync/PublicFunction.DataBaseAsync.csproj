@@ -1,0 +1,54 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>PublicFunction.DataBaseAsync</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <PackageId>PublicFunction.DataBaseAsync</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>sayid Mohammad Sajjad AminJavaheri</Authors>
+    <Company>rayanabniro</Company>
+    <Description>A fully asynchronous library providing a set of functional functions for interacting with various SQL and NoSQL databases. Includes async managers for Microsoft SQL Server, Redis, MongoDB, MySQL, Oracle, and RabbitMQ.</Description>
+    <PackageTags>database, sql, nosql, redis, mongodb, mysql, oracle, rabbitmq, async, asynchronous, publicfunction, dotnet</PackageTags>
+    <Copyright>Copyright © 2026 rayanabniro</Copyright>
+
+    <PackageProjectUrl>https://github.com/rayanabniro/PublicFunction/tree/main/PublicFunction.DataBaseAsync</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/rayanabniro/PublicFunction/tree/main/PublicFunction.DataBaseAsync</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+
+    <PackageReleaseNotes>
+      Initial release of the PublicFunction.DataBaseAsync library - A fully asynchronous version of the database toolkit.
+
+      ✨ Key Features in this version:
+      - **Microsoft SQL Server**: Async `SQLService` for executing stored procedures and commands with non-blocking I/O.
+      - **Redis**: Async `RedisManager` for key-value, hash, list, and set operations using StackExchange.Redis.
+      - **MongoDB**: (To be documented) Async infrastructure for MongoDB interactions.
+      - **MySQL**: (To be documented) Async infrastructure for MySQL database interactions.
+      - **Oracle**: (To be documented) Async infrastructure for Oracle database interactions.
+      - **RabbitMQ**: (To be documented) Async infrastructure for RabbitMQ message queuing.
+
+      📦 How to use:
+      All methods are designed with async/await patterns to improve scalability and performance in high-concurrency scenarios.
+
+      📚 Complete documentation and usage examples are available in the project repository:
+      https://github.com/rayanabniro/PublicFunction/tree/main/PublicFunction.DataBaseAsync
+    </PackageReleaseNotes>
+
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+
+
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="LICENSE.txt" Pack="true" PackagePath="/" />
+    <None Include="README.md" Pack="true" PackagePath="/" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+    <PackageReference Include="System.Data.Odbc" Version="8.0.1" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
+  </ItemGroup>
+
+</Project>
