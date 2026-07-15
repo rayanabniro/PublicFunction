@@ -7,7 +7,7 @@
     <Nullable>enable</Nullable>
 
     <PackageId>PublicFunction.AsyncDataBase</PackageId>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Authors>sayid Mohammad Sajjad AminJavaheri</Authors>
     <Company>rayanabniro</Company>
     <Description>A fully asynchronous library providing a set of functional functions for interacting with various SQL and NoSQL databases. Includes async managers for Microsoft SQL Server, Redis, MongoDB, MySQL, Oracle, and RabbitMQ.</Description>

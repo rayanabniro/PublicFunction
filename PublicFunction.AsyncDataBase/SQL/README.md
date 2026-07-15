@@ -11,12 +11,10 @@ In this **class**, we have infrastructures that can **centrally control** the co
     ```json
         {
           "PublicFunction": {
-            "DataBase": {
+            "AsyncDataBase": {
               "SQL": {
-                "SQLServiceAsync": {
                   "ConnectionString": "sql Connection String",
                   "ConnectionStringMirror":"for All Select Class Use this Connection String"
-                }
               }
             }
           }

@@ -42,8 +42,8 @@ namespace PublicFunction.AsyncDataBase
             public SQLServiceAsync(IConfiguration configuration)
             {
                 Configuration = configuration;
-                _connectionString = Configuration["PublicFunction:DataBase:SQL:SQLServiceAsync:ConnectionString"]?.ToString();
-                _connectionStringMirror = Configuration["PublicFunction:DataBase:SQL:SQLServiceAsync:ConnectionStringMirror"]?.ToString();
+                _connectionString = Configuration["PublicFunction:AsyncDataBase:SQL:ConnectionString"]?.ToString();
+                _connectionStringMirror = Configuration["PublicFunction:AsyncDataBase:SQL:ConnectionStringMirror"]?.ToString();
                 _sqlCommand = new SqlCommand();
                 _parameters = _sqlCommand.Parameters;
             }
