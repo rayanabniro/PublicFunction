@@ -23,7 +23,10 @@ In this **class**, we have infrastructures that can **centrally control** the co
 - in **Program.cs**  Add This dependence
   ```C#
     builder.Services.AddSingleton<IConfiguration>(_ => configuration);
+    OR
+    builder.Services.AddSingleton<IConfiguration>(sp => {return builder.Configuration;});
   ```
+  
 - in **Program.cs**  Add This dependence
   ```C#
     builder.Services.AddScoped<PublicFunction.AsyncDataBase.SQLAsync.ISQLServiceAsync, PublicFunction.AsyncDataBase.SQLAsync.SQLServiceAsync>();
