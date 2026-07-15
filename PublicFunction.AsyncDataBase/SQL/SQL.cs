@@ -340,7 +340,32 @@ namespace PublicFunction.AsyncDataBase
                     if (value == null || value == DBNull.Value)
                         return default;
 
-                    return (T)Convert.ChangeType(value, typeof(T));
+                    // اگر value همان نوع T است
+                    if (value is T result)
+                        return result;
+
+                    // برای string
+                    if (typeof(T) == typeof(string))
+                        return (T)(object)value.ToString();
+
+                    // برای Guid
+                    if (typeof(T) == typeof(Guid) || typeof(T) == typeof(Guid?))
+                    {
+                        if (value is Guid guid)
+                            return (T)(object)guid;
+                        return (T)(object)Guid.Parse(value.ToString());
+                    }
+
+                    // برای عددی و دیت‌تایم (با Convert)
+                    try
+                    {
+                        return (T)Convert.ChangeType(value, typeof(T));
+                    }
+                    catch
+                    {
+                        // اگر تبدیل نشد، مقدار پیش‌فرض برگردان
+                        return default;
+                    }
                 }
                 catch (Exception ex)
                 {
