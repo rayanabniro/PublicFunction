@@ -6,7 +6,7 @@ A comprehensive, **fully asynchronous** C# library for interacting with various 
 
 - **Asynchronous by Design**: All methods are async, ensuring non-blocking database operations.
 - **Multi-Database Support**: Provides consistent, async-first managers for:
-  - **Microsoft SQL Server** - [Microsoft SQL Server](https://github.com/rayanabniro/PublicFunction/blob/main/PublicFunction/AsyncDataBase/SQL/README.md "README.md")
+  - [Microsoft SQL Server](https://github.com/rayanabniro/PublicFunction/blob/main/PublicFunction.AsyncDataBase/SQL/README.md "README.md")
   - **Redis** (Async `RedisManager` for key-value, hashes, lists, and sets)
   - **MongoDB**
   - **MySQL**
