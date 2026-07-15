@@ -2,11 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <RootNamespace>PublicFunction.DataBaseAsync</RootNamespace>
+    <RootNamespace>PublicFunction.AsyncDataBase</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
-    <PackageId>PublicFunction.DataBaseAsync</PackageId>
+    <PackageId>PublicFunction.AsyncDataBase</PackageId>
     <Version>1.0.0</Version>
     <Authors>sayid Mohammad Sajjad AminJavaheri</Authors>
     <Company>rayanabniro</Company>
@@ -14,12 +14,12 @@
     <PackageTags>database, sql, nosql, redis, mongodb, mysql, oracle, rabbitmq, async, asynchronous, publicfunction, dotnet</PackageTags>
     <Copyright>Copyright © 2026 rayanabniro</Copyright>
 
-    <PackageProjectUrl>https://github.com/rayanabniro/PublicFunction/tree/main/PublicFunction.DataBaseAsync</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/rayanabniro/PublicFunction/tree/main/PublicFunction.DataBaseAsync</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/rayanabniro/PublicFunction/tree/main/PublicFunction.AsyncDataBase</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/rayanabniro/PublicFunction/tree/main/PublicFunction.AsyncDataBase</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
 
     <PackageReleaseNotes>
-      Initial release of the PublicFunction.DataBaseAsync library - A fully asynchronous version of the database toolkit.
+      Initial release of the PublicFunction.AsyncDataBase library - A fully asynchronous version of the database toolkit.
 
       ✨ Key Features in this version:
       - **Microsoft SQL Server**: Async `SQLService` for executing stored procedures and commands with non-blocking I/O.
@@ -33,7 +33,7 @@
       All methods are designed with async/await patterns to improve scalability and performance in high-concurrency scenarios.
 
       📚 Complete documentation and usage examples are available in the project repository:
-      https://github.com/rayanabniro/PublicFunction/tree/main/PublicFunction.DataBaseAsync
+      https://github.com/rayanabniro/PublicFunction/tree/main/PublicFunction.AsyncDataBase
     </PackageReleaseNotes>
 
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>

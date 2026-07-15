@@ -1,4 +1,4 @@
-# PublicFunction.DataBaseAsync
+# PublicFunction.AsyncDataBase
 
 A comprehensive, **fully asynchronous** C# library for interacting with various SQL and NoSQL databases. This library is designed to improve scalability and performance in high-concurrency applications by leveraging the `async/await` pattern for all I/O operations.
 
@@ -6,7 +6,7 @@ A comprehensive, **fully asynchronous** C# library for interacting with various 
 
 - **Asynchronous by Design**: All methods are async, ensuring non-blocking database operations.
 - **Multi-Database Support**: Provides consistent, async-first managers for:
-  - **Microsoft SQL Server** (Async `SQLService`)
+  - **Microsoft SQL Server** - [Microsoft SQL Server](https://github.com/rayanabniro/PublicFunction/blob/main/PublicFunction/AsyncDataBase/SQL/README.md "README.md")
   - **Redis** (Async `RedisManager` for key-value, hashes, lists, and sets)
   - **MongoDB**
   - **MySQL**
@@ -20,4 +20,4 @@ A comprehensive, **fully asynchronous** C# library for interacting with various 
 To install the package via NuGet, run the following command in your project:
 
 ```bash
-dotnet add package PublicFunction.DataBaseAsync
+dotnet add package PublicFunction.AsyncDataBase

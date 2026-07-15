@@ -1,8 +1,8 @@
-## PublicFunction.DatabaseAsync
+## PublicFunction.AsyncDataBase
 
 [README.md](https://github.com/rayanabniro/PublicFunction/blob/main/PublicFunction/DataBase/README.md "README.md")
 
-# PublicFunction.DatabaseAsync.SQL
+# PublicFunction.AsyncDataBase.SQL
 
 In this **class**, we have infrastructures that can **centrally control** the connection to the **sql database** asynchronously
 
@@ -28,14 +28,14 @@ In this **class**, we have infrastructures that can **centrally control** the co
   ```
 - in **Program.cs**  Add This dependence
   ```C#
-    builder.Services.AddScoped<PublicFunction.DataBaseAsync.SQLAsync.ISQLServiceAsync, PublicFunction.DataBaseAsync.SQLAsync.SQLServiceAsync>();
+    builder.Services.AddScoped<PublicFunction.AsyncDataBase.SQLAsync.ISQLServiceAsync, PublicFunction.AsyncDataBase.SQLAsync.SQLServiceAsync>();
   ```
 - Suppose you want to use functions in a class, just write the following code in its constructor function
   ```C#
     public class Test
     	{
-    		private readonly PublicFunction.DataBaseAsync.SQLAsync.ISQLServiceAsync SQLService;
-    		public Test(PublicFunction.DataBaseAsync.SQLAsync.ISQLServiceAsync sqlservice)
+    		private readonly PublicFunction.AsyncDataBase.SQLAsync.ISQLServiceAsync SQLService;
+    		public Test(PublicFunction.AsyncDataBase.SQLAsync.ISQLServiceAsync sqlservice)
     		{
     		    SQLService = sqlservice;
     		}
