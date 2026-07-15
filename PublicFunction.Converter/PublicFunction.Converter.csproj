@@ -2,8 +2,48 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>PublicFunction.Converter</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-  </PropertyGroup>
 
+    <PackageId>PublicFunction.Converter</PackageId>
+    <Version>1.0.1</Version>
+    <Authors>sayid Mohammad Sajjad AminJavaheri</Authors>
+    <Company>rayanabniro</Company>
+    <Description>The PublicFunction.Converter library is designed for converting between various data types and strings in C#. It provides a set of classes, each tailored for a specific data type (e.g., StringService, IntService, DoubleService, etc.). Each class typically includes methods for converting to and from its type, as well as handling nullable types and exceptions. This library streamlines type conversion, ensuring type safety and reducing runtime errors.</Description>
+    <PackageTags>converter, utility, publicfunction, dotnet</PackageTags>
+    <Copyright>Copyright © 2026 rayanabniro</Copyright>
+
+    <PackageProjectUrl>https://github.com/rayanabniro/PublicFunction/tree/main/PublicFunction.Converter</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/rayanabniro/PublicFunction/tree/main/PublicFunction.Converter</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    
+
+    <PackageReleaseNotes>
+      Initial release of the PublicFunction.Converter library for safe and efficient data type conversion in C#.
+
+      ✨ Key Features in this version:
+      -Conversion support for primitive data types including: Boolean, Byte, Char, Decimal, Double, Float, Guid, Integer, Long, Short, UInt, ULong, UShort, and String
+      - Specialized services for structured data conversion including DateTime, DataSet, DataTable, and Json
+      - Automatic error handling and full support for Nullable Types
+      - Standardized method naming conventions for consistent To/From type conversion
+      - Reduced runtime errors through built-in validation mechanisms
+
+      📦 How to use:
+      Each class is specifically designed for a target data type.For example, use the IntegerService class methods to convert strings to integers.
+
+      📚 Complete documentation and usage examples are available in the project repository:
+      https://github.com/rayanabniro/PublicFunction/tree/main/PublicFunction.Converter
+    </PackageReleaseNotes>
+
+
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+ </PropertyGroup>
+    <ItemGroup>
+      <PackageReference Include="JWT" Version="10.1.1" />
+      <None Include="LICENSE.txt" Pack="true" PackagePath="/"/>
+      <None Include="README.md" Pack="true" PackagePath="/"/>
+    </ItemGroup>  
 </Project>
