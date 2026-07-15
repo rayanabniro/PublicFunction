@@ -1,0 +1,70 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>PublicFunction.DataBase</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <PackageId>PublicFunction.DataBase</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>sayid Mohammad Sajjad AminJavaheri</Authors>
+    <Company>rayanabniro</Company>
+    <Description>A comprehensive library providing a set of functional functions for interacting with various SQL and NoSQL databases. It includes managers for Microsoft SQL Server, Redis, MongoDB, MySQL, Oracle, and RabbitMQ.</Description>
+    <PackageTags>database, sql, nosql, redis, mongodb, mysql, oracle, rabbitmq, publicfunction, dotnet</PackageTags>
+    <Copyright>Copyright © 2026 rayanabniro</Copyright>
+
+    <PackageProjectUrl>https://github.com/rayanabniro/PublicFunction/tree/main/PublicFunction.DataBase</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/rayanabniro/PublicFunction/tree/main/PublicFunction.DataBase</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+
+    <PackageReleaseNotes>
+      Initial release of the PublicFunction.DataBase library.
+
+      ✨ Key Features in this version:
+      - **Microsoft SQL Server**: Provides a robust `SQLService` for executing stored procedures and commands with parameter management.
+      - **Redis**: Includes a `RedisManager` for key-value operations, hashes, lists, and sets using StackExchange.Redis.
+      - **MongoDB**: (To be documented) Infrastructure for MongoDB interactions.
+      - **MySQL**: (To be documented) Infrastructure for MySQL database interactions.
+      - **Oracle**: (To be documented) Infrastructure for Oracle database interactions.
+      - **RabbitMQ**: (To be documented) Infrastructure for RabbitMQ message queuing.
+
+      📦 How to use:
+      Each database type has a dedicated manager or service. For example, use `SQLService` for SQL databases and `RedisManager` for Redis cache operations.
+
+      📚 Complete documentation and usage examples are available in the project repository:
+      https://github.com/rayanabniro/PublicFunction/tree/main/PublicFunction.DataBase
+    </PackageReleaseNotes>
+
+    <!-- تنظیمات برای تولید خودکار بسته هنگام Build -->
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+
+    <!-- تنظیمات برای License و Readme -->
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="LICENSE.txt" Pack="true" PackagePath="/" />
+    <None Include="README.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="PublicFunction.Converter" Version="1.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.8" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+    <PackageReference Include="Microsoft.IdentityModel" Version="7.0.0" />
+    <PackageReference Include="MongoDB.Driver" Version="2.29.0" />
+    <PackageReference Include="MySql.Data" Version="9.0.0" />
+    // <PackageReference Include="PublicFunction.DataBaseAsync" Version="2.0.6" />
+    <PackageReference Include="RabbitMQ.Client" Version="6.8.1" />
+    <PackageReference Include="StackExchange.Redis" Version="2.8.0" />
+    <PackageReference Include="System.Data.Odbc" Version="8.0.1" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.0.1" />
+  </ItemGroup>
+
+
+</Project>
