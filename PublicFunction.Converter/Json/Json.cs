@@ -3,10 +3,10 @@ using System.Text.Json;
 
 namespace PublicFunction.Converter
 {
-    interface IJson
+    public interface IJson
     {
         public T Deserialize<T>(string json);
-        public string Serialize<T>(T obj);
+        public string Serialize<T>(T obj, JsonSerializerOptions? options = null);
     }
 
     public class Json : IJson
@@ -23,11 +23,16 @@ namespace PublicFunction.Converter
             }
         }
 
-        public string Serialize<T>(T obj)
+        public string Serialize<T>(T obj, JsonSerializerOptions? options = null)
         {
             try
             {
-                return JsonSerializer.Serialize(obj, new JsonSerializerOptions { WriteIndented = true });
+                options ??= new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                };
+                return JsonSerializer.Serialize(obj, options);
             }
             catch (Exception ex)
             {

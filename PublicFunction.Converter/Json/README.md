@@ -24,5 +24,5 @@ In this **class**, we have infrastructures that can **centrally control** For Co
         // Json string To Object or class T
         public T Deserialize<T>(string json);
         // T obj to string
-        public string Serialize<T>(T obj);
+        public string Serialize<T>(T obj, JsonSerializerOptions? options = null);
     ```
