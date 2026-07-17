@@ -3,40 +3,43 @@ using System.Text.Json;
 
 namespace PublicFunction.Converter
 {
-    public interface IJson
+    public class Json
     {
-        public T Deserialize<T>(string json);
-        public string Serialize<T>(T obj, JsonSerializerOptions? options = null);
-    }
-
-    public class Json : IJson
-    {
-        public T Deserialize<T>(string json)
+        public interface IJsonService
         {
-            try
-            {
-                return JsonSerializer.Deserialize<T>(json);
-            }
-            catch (Exception ex)
-            {
-                throw new InvalidOperationException("Error deserializing JSON.", ex);
-            }
+           public T Deserialize<T>(string json);
+           public string Serialize<T>(T obj, JsonSerializerOptions? options = null);
         }
 
-        public string Serialize<T>(T obj, JsonSerializerOptions? options = null)
+        public class JsonService : IJsonService
         {
-            try
+            public T Deserialize<T>(string json)
             {
-                options ??= new JsonSerializerOptions
+                try
                 {
-                    WriteIndented = true,
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-                };
-                return JsonSerializer.Serialize(obj, options);
+                    return JsonSerializer.Deserialize<T>(json);
+                }
+                catch (Exception ex)
+                {
+                    throw new InvalidOperationException("Error deserializing JSON.", ex);
+                }
             }
-            catch (Exception ex)
+
+            public string Serialize<T>(T obj, JsonSerializerOptions? options = null)
             {
-                throw new InvalidOperationException("Error serializing object to JSON.", ex);
+                try
+                {
+                    options ??= new JsonSerializerOptions
+                    {
+                        WriteIndented = true,
+                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                    };
+                    return JsonSerializer.Serialize(obj, options);
+                }
+                catch (Exception ex)
+                {
+                    throw new InvalidOperationException("Error serializing object to JSON.", ex);
+                }
             }
         }
     }

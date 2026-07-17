@@ -5,15 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PublicFunction.Converter.UInt
+namespace PublicFunction.Converter
 {
     public class UInt
     {
         public interface IUInt
         {
-            T ConvertTo<T>(uint input);
-            uint ConvertFrom<T>(T input);
-            bool TryConvertTo(string input, out uint result);
+            public T ConvertTo<T>(uint input);
+            public uint ConvertFrom<T>(T input);
+            public bool TryConvertTo(string input, out uint result);
         }
 
         public class UIntService : IUInt

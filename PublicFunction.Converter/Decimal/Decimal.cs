@@ -11,9 +11,9 @@ namespace PublicFunction.Converter
     {
         public interface IDecimal
         {
-            T ConvertTo<T>(decimal input);
-            decimal ConvertFrom<T>(T input);
-            bool TryConvertTo(string input, out decimal result);
+            public T ConvertTo<T>(decimal input);
+            public decimal ConvertFrom<T>(T input);
+            public bool TryConvertTo(string input, out decimal result);
         }
 
         public class DecimalService : IDecimal

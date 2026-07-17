@@ -4,15 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PublicFunction.Converter.Char
+namespace PublicFunction.Converter
 {
     public class Char
     {
         public interface IChar
         {
-            T ConvertTo<T>(char input);
-            char ConvertFrom<T>(T input);
-            bool TryConvertTo(string input, out char result);
+            public T ConvertTo<T>(char input);
+            public char ConvertFrom<T>(T input);
+            public bool TryConvertTo(string input, out char result);
         }
 
         public class CharService : IChar

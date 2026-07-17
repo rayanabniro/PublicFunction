@@ -5,15 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PublicFunction.Converter.UShort
+namespace PublicFunction.Converter
 {
     public class UShort
     {
         public interface IUShort
         {
-            T ConvertTo<T>(ushort input);
-            ushort ConvertFrom<T>(T input);
-            bool TryConvertTo(string input, out ushort result);
+            public T ConvertTo<T>(ushort input);
+            public ushort ConvertFrom<T>(T input);
+            public bool TryConvertTo(string input, out ushort result);
         }
 
         public class UShortService : IUShort

@@ -5,15 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PublicFunction.Converter.ULong
+namespace PublicFunction.Converter
 {
     public class ULong
     {
         public interface IULong
         {
-            T ConvertTo<T>(ulong input);
-            ulong ConvertFrom<T>(T input);
-            bool TryConvertTo(string input, out ulong result);
+            public T ConvertTo<T>(ulong input);
+            public ulong ConvertFrom<T>(T input);
+            public bool TryConvertTo(string input, out ulong result);
         }
 
         public class ULongService : IULong

@@ -11,9 +11,9 @@ namespace PublicFunction.Converter
     {
         public interface IDateTime
         {
-            T ConvertTo<T>(System.DateTime input);
-            System.DateTime ConvertFrom<T>(T input);
-            bool TryConvertTo(string input, out System.DateTime result);
+            public T ConvertTo<T>(System.DateTime input);
+            public System.DateTime ConvertFrom<T>(T input);
+            public bool TryConvertTo(string input, out System.DateTime result);
         }
 
         public class DateTimeService : IDateTime
@@ -149,28 +149,28 @@ namespace PublicFunction.Converter
             /// </summary>
             /// <param name="dateTime">The DateTime to convert.</param>
             /// <returns>A long representing the Unix timestamp.</returns>
-            long ToUnixTimestamp(System.DateTime dateTime);
+            public long ToUnixTimestamp(System.DateTime dateTime);
 
             /// <summary>
             /// Converts a Unix timestamp to a DateTime object.
             /// </summary>
             /// <param name="unixTimestamp">The Unix timestamp to convert.</param>
             /// <returns>A DateTime object representing the date.</returns>
-            System.DateTime FromUnixTimestamp(long unixTimestamp);
+            public System.DateTime FromUnixTimestamp(long unixTimestamp);
 
             /// <summary>
             /// Converts a DateTime to ISO 8601 string format.
             /// </summary>
             /// <param name="dateTime">The DateTime to convert.</param>
             /// <returns>A string representing the date in ISO 8601 format.</returns>
-            string ToIso8601(System.DateTime dateTime);
+            public string ToIso8601(System.DateTime dateTime);
 
             /// <summary>
             /// Converts an ISO 8601 string to a DateTime object.
             /// </summary>
             /// <param name="iso8601String">The ISO 8601 string to convert.</param>
             /// <returns>A DateTime object representing the date.</returns>
-            System.DateTime FromIso8601(string iso8601String);
+            public System.DateTime FromIso8601(string iso8601String);
 
             /// <summary>
             /// Converts a DateTime to a custom format string.
@@ -178,7 +178,7 @@ namespace PublicFunction.Converter
             /// <param name="dateTime">The DateTime to convert.</param>
             /// <param name="format">The format string (e.g., "yyyy-MM-dd").</param>
             /// <returns>A string representing the formatted date.</returns>
-            string ToCustomFormat(System.DateTime dateTime, string format);
+            public string ToCustomFormat(System.DateTime dateTime, string format);
 
             /// <summary>
             /// Converts a string from a custom format to a DateTime object.
@@ -186,7 +186,7 @@ namespace PublicFunction.Converter
             /// <param name="dateString">The date string to convert.</param>
             /// <param name="format">The format string (e.g., "yyyy-MM-dd").</param>
             /// <returns>A DateTime object representing the date.</returns>
-            System.DateTime FromCustomFormat(string dateString, string format);
+            public System.DateTime FromCustomFormat(string dateString, string format);
         }
 
         /// <summary>

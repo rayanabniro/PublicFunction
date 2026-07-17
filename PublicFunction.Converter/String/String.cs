@@ -21,7 +21,7 @@ namespace PublicFunction.Converter
             /// <exception cref="InvalidOperationException">
             /// Thrown when the conversion fails or the type is not supported.
             /// </exception>
-            T ConvertTo<T>(string input);
+            public T ConvertTo<T>(string input);
 
             /// <summary>
             /// Converts an object of type T to its string representation.
@@ -33,7 +33,7 @@ namespace PublicFunction.Converter
             /// <exception cref="InvalidOperationException">
             /// Thrown when the conversion fails or the type is not supported.
             /// </exception>
-            string ConvertFrom<T>(T input);
+            public string ConvertFrom<T>(T input);
 
             /// <summary>
             /// Attempts to convert a string input to the specified type T.
@@ -43,7 +43,7 @@ namespace PublicFunction.Converter
             /// <param name="input">The string input to convert.</param>
             /// <param name="result">The converted value if successful; otherwise, the default value of T.</param>
             /// <returns>True if conversion is successful; otherwise, false.</returns>
-            bool TryConvertTo<T>(string input, out T result);
+            public bool TryConvertTo<T>(string input, out T result);
         }
         public class StringService : IString
         {

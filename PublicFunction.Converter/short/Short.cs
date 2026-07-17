@@ -11,9 +11,9 @@ namespace PublicFunction.Converter
     {
         public interface IShort
         {
-            T ConvertTo<T>(short input);
-            short ConvertFrom<T>(T input);
-            bool TryConvertTo(string input, out short result);
+            public T ConvertTo<T>(short input);
+            public short ConvertFrom<T>(T input);
+            public bool TryConvertTo(string input, out short result);
         }
 
         public class ShortService : IShort

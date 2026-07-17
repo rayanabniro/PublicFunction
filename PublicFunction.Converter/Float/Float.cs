@@ -11,9 +11,9 @@ namespace PublicFunction.Converter
     {
         public interface IFloat
         {
-            T ConvertTo<T>(float input);
-            float ConvertFrom<T>(T input);
-            bool TryConvertTo(string input, out float result);
+            public T ConvertTo<T>(float input);
+            public float ConvertFrom<T>(T input);
+            public bool TryConvertTo(string input, out float result);
         }
 
         public class FloatService : IFloat

@@ -11,9 +11,9 @@ namespace PublicFunction.Converter
     {
         public interface IDouble
         {
-            T ConvertTo<T>(double input);
-            double ConvertFrom<T>(T input);
-            bool TryConvertTo(string input, out double result);
+            public T ConvertTo<T>(double input);
+            public double ConvertFrom<T>(T input);
+            public bool TryConvertTo(string input, out double result);
         }
 
         public class DoubleService : IDouble

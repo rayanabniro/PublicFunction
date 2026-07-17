@@ -11,9 +11,9 @@ namespace PublicFunction.Converter.Byte
     {
         public interface IByte
         {
-            T ConvertTo<T>(byte input);
-            byte ConvertFrom<T>(T input);
-            bool TryConvertTo(string input, out byte result);
+            public T ConvertTo<T>(byte input);
+            public byte ConvertFrom<T>(T input);
+            public bool TryConvertTo(string input, out byte result);
         }
 
         public class ByteService : IByte

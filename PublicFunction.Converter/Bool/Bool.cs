@@ -11,9 +11,9 @@ namespace PublicFunction.Converter
     {
         public interface IBool
         {
-            T ConvertTo<T>(bool input);
-            bool ConvertFrom<T>(T input);
-            bool TryConvertTo(string input, out bool result);
+            public T ConvertTo<T>(bool input);
+            public bool ConvertFrom<T>(T input);
+            public bool TryConvertTo(string input, out bool result);
         }
 
         public class BoolService : IBool

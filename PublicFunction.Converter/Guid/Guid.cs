@@ -5,15 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PublicFunction.Converter.Guid
+namespace PublicFunction.Converter
 {
     public class Guid
     {
         public interface IGuid
         {
-            T ConvertTo<T>(System.Guid input);
-            System.Guid ConvertFrom<T>(T input);
-            bool TryConvertTo(string input, out System.Guid result);
+            public T ConvertTo<T>(System.Guid input);
+            public System.Guid ConvertFrom<T>(T input);
+            public bool TryConvertTo(string input, out System.Guid result);
         }
 
         public class GuidService : IGuid
