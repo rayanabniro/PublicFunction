@@ -9,9 +9,9 @@ using System.Xml;
 
 namespace PublicFunction.Converter
 {
-    public class Datatable
+    public class DatatableConverter
     {
-        public interface IDatatableConvertor
+        public interface IDatatable
         {
             public string DataTableToJson(DataTable _DataTable);
             public DataTable JsonToDataTable(string Json);
@@ -22,7 +22,7 @@ namespace PublicFunction.Converter
             public string DataTableToCsv(DataTable _DataTable);
         }
 
-        public class DatatableConvertor : IDatatableConvertor
+        public class DatatableService : IDatatable
         {
             /// <summary>
             /// Converts a DataTable to a JSON string using System.Text.Json.

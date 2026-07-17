@@ -9,9 +9,9 @@ using System.Xml;
 
 namespace PublicFunction.Converter
 {
-    public class DataSet
+    public class DataSetConverter
     {
-        public interface IDataSetConverter
+        public interface IDataSet
         {
             public string DataSetToJson(System.Data.DataSet dataSet);
             public List<List<Dictionary<string, object>>> DataSetToList(System.Data.DataSet dataSet);
@@ -21,7 +21,7 @@ namespace PublicFunction.Converter
             public byte[] DataSetToExcel(System.Data.DataSet dataSet);
             public string DataSetToHtml(System.Data.DataSet dataSet);
         }
-        public class DataSetConverter : IDataSetConverter
+        public class DataSetService : IDataSet
         {
 
 

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PublicFunction.Converter
 {
-    public class Short
+    public class ShortConverter
     {
         public interface IShort
         {

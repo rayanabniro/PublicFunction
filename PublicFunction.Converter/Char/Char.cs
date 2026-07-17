@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PublicFunction.Converter
 {
-    public class Char
+    public class CharConverter
     {
         public interface IChar
         {

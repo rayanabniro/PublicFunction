@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PublicFunction.Converter.Byte
+namespace PublicFunction.Converter
 {
-    public class Byte
+    public class ByteConverter
     {
         public interface IByte
         {

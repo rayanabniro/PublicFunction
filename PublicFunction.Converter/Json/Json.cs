@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace PublicFunction.Converter
 {
-    public class Json
+    public class JsonConverter
     {
         public interface IJsonService
         {

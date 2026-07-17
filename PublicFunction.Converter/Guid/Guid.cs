@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PublicFunction.Converter
 {
-    public class Guid
+    public class GuidConverter
     {
         public interface IGuid
         {

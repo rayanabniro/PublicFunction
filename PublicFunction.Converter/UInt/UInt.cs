@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PublicFunction.Converter
 {
-    public class UInt
+    public class UIntConverter
     {
         public interface IUInt
         {

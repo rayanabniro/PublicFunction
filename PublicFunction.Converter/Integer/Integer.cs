@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PublicFunction.Converter
 {
-    public class Integer
+    public class IntegerConverter
     {
         public interface IInteger
         {

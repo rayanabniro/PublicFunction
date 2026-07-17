@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PublicFunction.Converter
 {
-    public class Double
+    public class DoubleConverter
     {
         public interface IDouble
         {

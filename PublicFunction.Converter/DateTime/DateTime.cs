@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PublicFunction.Converter
 {
-    public class DateTime
+    public class DateTimeConverter
     {
         public interface IDateTime
         {

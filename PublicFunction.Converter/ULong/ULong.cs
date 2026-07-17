@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PublicFunction.Converter
 {
-    public class ULong
+    public class ULongConverter
     {
         public interface IULong
         {

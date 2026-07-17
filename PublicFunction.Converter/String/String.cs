@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PublicFunction.Converter
 {
-    public class String
+    public class StringConverter
     {
         public interface IString
         {

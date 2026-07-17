@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PublicFunction.Converter
 {
-    public class Decimal
+    public class DecimalConverter
     {
         public interface IDecimal
         {

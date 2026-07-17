@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PublicFunction.Converter
 {
-    public class Float
+    public class FloatConverter
     {
         public interface IFloat
         {

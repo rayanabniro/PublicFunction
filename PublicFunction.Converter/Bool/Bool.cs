@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PublicFunction.Converter
 {
-    public class Bool
+    public class BoolConverter
     {
         public interface IBool
         {
