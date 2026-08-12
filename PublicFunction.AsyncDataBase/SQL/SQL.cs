@@ -23,10 +23,10 @@ namespace PublicFunction.AsyncDataBase
             Task<bool> AddAsync();
             Task<DataTable> SelectAsync();
             Task<List<Dictionary<string, object>>> SelectListAsync();
-            Task<T> SelectModelAsync<T>() where T : SQLDataModel;
+            Task<T?> SelectModelAsync<T>() where T : SQLDataModel;
             Task<DataSet> MultiSelectAsync();
             Task<List<List<Dictionary<string, object>>>> MultiSelectListAsync();
-            Task<T> MultiSelectModelAsync<T>(string[] tableNames) where T : SQLDataModel;
+            Task<T?> MultiSelectModelAsync<T>(string[] tableNames) where T : SQLDataModel;
             Task<bool> InsertAsync<T>(string tableName, T Model) where T : SQLDataModel;
             Task<bool> UpdateAsync<T>(string tableName, string ID, T Model) where T : SQLDataModel;
             Task<bool> DeleteAsync(string tableName, string ID);
@@ -38,16 +38,20 @@ namespace PublicFunction.AsyncDataBase
             private readonly IConfiguration Configuration;
             private readonly string _connectionString;
             private readonly string _connectionStringMirror;
-            private SqlCommand _sqlCommand;
-            private SqlParameterCollection _parameters;
+            private SqlCommand _sqlCommand = null!;
+            private SqlParameterCollection _parameters = null!;
 
             public SQLServiceAsync(IConfiguration configuration)
             {
-                Configuration = configuration;
-                _connectionString = Configuration["PublicFunction:AsyncDataBase:SQL:ConnectionString"]?.ToString();
-                _connectionStringMirror = Configuration["PublicFunction:AsyncDataBase:SQL:ConnectionStringMirror"]?.ToString();
-                _sqlCommand = new SqlCommand();
-                _parameters = _sqlCommand.Parameters;
+                Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+
+                _connectionString = Configuration["PublicFunction:AsyncDataBase:SQL:ConnectionString"]?.ToString()
+                    ?? throw new InvalidOperationException("ConnectionString not configured");
+
+                _connectionStringMirror = Configuration["PublicFunction:AsyncDataBase:SQL:ConnectionStringMirror"]?.ToString()
+                    ?? throw new InvalidOperationException("ConnectionStringMirror not configured");
+
+                ResetCommand();
             }
 
             public string StoredProcedureName
@@ -55,18 +59,28 @@ namespace PublicFunction.AsyncDataBase
                 get => _sqlCommand.CommandText;
                 set
                 {
+                    ResetCommand();
                     _sqlCommand.CommandText = value;
                     _sqlCommand.CommandType = CommandType.StoredProcedure;
                 }
             }
+
             public string Query
             {
                 get => _sqlCommand.CommandText;
                 set
                 {
+                    ResetCommand();
                     _sqlCommand.CommandText = value;
-                    _sqlCommand.CommandType = CommandType.Text; // اصلاح شده
+                    _sqlCommand.CommandType = CommandType.Text;
                 }
+            }
+
+            private void ResetCommand()
+            {
+                _sqlCommand?.Dispose();
+                _sqlCommand = new SqlCommand();
+                _parameters = _sqlCommand.Parameters;
             }
 
             public void AddParameter(string Name, SqlDbType DbType, object Data)
@@ -157,7 +171,7 @@ namespace PublicFunction.AsyncDataBase
                 }
             }
 
-            public async Task<T> SelectModelAsync<T>() where T : SQLDataModel
+            public async Task<T?> SelectModelAsync<T>() where T : SQLDataModel
             {
                 try
                 {
@@ -222,7 +236,7 @@ namespace PublicFunction.AsyncDataBase
                 }
             }
 
-            public async Task<T> MultiSelectModelAsync<T>(string[] tableNames) where T : SQLDataModel
+            public async Task<T?> MultiSelectModelAsync<T>(string[] tableNames) where T : SQLDataModel
             {
                 try
                 {
@@ -325,7 +339,6 @@ namespace PublicFunction.AsyncDataBase
                     throw new Exception($"Error deleting from {tableName}", ex);
                 }
             }
-            
         }
     }
 }
