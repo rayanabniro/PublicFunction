@@ -44,6 +44,21 @@ In this **class**, we have infrastructures that can **centrally control** the co
     		}
     	}
   ```
+- or
+  ```C#
+    builder.Services.AddScoped<PublicFunction.AsyncDataBase.SQLAsync.ISQLServiceAsync>(serviceProvider =>
+    {
+        var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+        var connectionStringPath = "ConnectionStrings:DefaultConnection";
+        var connectionStringMirrorPath = "ConnectionStrings:MirrorConnection"; 
+        
+        return new PublicFunction.AsyncDataBase.SQLAsync.SQLServiceAsync(
+            configuration, 
+            connectionStringPath, 
+            connectionStringMirrorPath
+        );
+    });
+  ```
 
   # SQLServiceAsync Documentation
 

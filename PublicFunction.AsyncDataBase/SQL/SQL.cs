@@ -53,6 +53,18 @@ namespace PublicFunction.AsyncDataBase
 
                 ResetCommand();
             }
+            public SQLServiceAsync(IConfiguration configuration,string connectionStringConfigPath,string connectionStringMirrorConfigPath)
+            {
+                Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+
+                _connectionString = Configuration[connectionStringConfigPath]?.ToString()
+                    ?? throw new InvalidOperationException("ConnectionString not configured");
+
+                _connectionStringMirror = Configuration[connectionStringMirrorConfigPath]?.ToString()
+                    ?? throw new InvalidOperationException("ConnectionStringMirror not configured");
+
+                ResetCommand();
+            }
 
             public string StoredProcedureName
             {
